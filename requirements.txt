@@ -1,0 +1,17 @@
+aiofiles
+alembic
+beautifulsoup4
+fastapi
+httpx
+jinja2
+lxml
+orjson
+pandas
+pydantic-settings
+python-dotenv
+pytest
+ruff
+selectolax
+sqlalchemy
+tenacity
+uvicorn[standard]
