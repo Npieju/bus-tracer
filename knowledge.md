@@ -1,78 +1,78 @@
-# Bus Tracer Knowledge
+# Bus Tracer ナレッジ
 
-## Product Goal
+## 目的
 
-- Publish a lightweight web app on GitHub Pages.
-- Show the Kanachu real-time approach information for the fixed route 伊勢山（平塚市） -> 大野農協前（平塚市）.
-- Refresh the published data every 5 minutes.
+- GitHub Pages 上で軽量な web アプリを公開する。
+- 固定ルート 伊勢山（平塚市） -> 大野農協前（平塚市）の神奈中リアルタイム接近情報を表示する。
+- 公開データを 5 分ごとに更新する。
 
-## Fixed Route Definition
+## 固定ルート定義
 
-- Boarding stop: 伊勢山（平塚市）
-- Boarding stop ID: `16240`
-- Alighting stop: 大野農協前（平塚市）
-- Alighting stop ID: `16244`
+- 乗車停留所: 伊勢山（平塚市）
+- 乗車停留所 ID: `16240`
+- 降車停留所: 大野農協前（平塚市）
+- 降車停留所 ID: `16244`
 
-## Architecture Decisions
+## 設計判断
 
-- The site is static and served from `docs/` via GitHub Pages.
-- Live data is not fetched directly from the browser because the upstream site does not provide a permissive CORS path suitable for this app.
-- Data is fetched server-side inside GitHub Actions on a 5-minute schedule.
-- The scraper writes a normalized JSON snapshot to `docs/data/status.json`.
-- The frontend reads `status.json` and refreshes it in the browser every 5 minutes.
+- サイトは静的構成で、`docs/` を GitHub Pages から配信する。
+- upstream サイトにはこの用途で使える permissive な CORS 経路がないため、live data をブラウザから直接取得しない。
+- データ取得は GitHub Actions 内で 5 分ごとに server-side 実行する。
+- スクレイパーは正規化済み JSON スナップショットを `docs/data/status.json` に出力する。
+- フロントエンドは `status.json` を読み、ブラウザ内でも 5 分ごとに再取得する。
 
-## Key Files
+## 主要ファイル
 
-- `scripts/fetch_bus_data.py`: upstream fetch + parse + JSON generation.
-- `docs/index.html`: static UI shell.
-- `docs/app.js`: JSON fetch, timer, and rendering logic.
-- `docs/styles.css`: visual design.
-- `.github/workflows/pages.yml`: scheduled fetch and GitHub Pages deploy.
-- `docs/.nojekyll`: disables Jekyll processing on Pages.
+- `scripts/fetch_bus_data.py`: upstream 取得、解析、JSON 生成。
+- `docs/index.html`: 静的 UI 本体。
+- `docs/app.js`: JSON 取得、タイマー、描画ロジック。
+- `docs/styles.css`: 見た目の定義。
+- `.github/workflows/pages.yml`: 定期取得と GitHub Pages デプロイ。
+- `docs/.nojekyll`: Pages 上で Jekyll 処理を無効化する。
 
-## Deployment Assumptions
+## デプロイ前提
 
-- The default branch is `main`.
-- GitHub Pages is configured to use `GitHub Actions` as the source.
-- The first deployment must be triggered after the initial push.
-- If the repository remains private, the GitHub plan must support private GitHub Pages.
+- default branch は `main`。
+- GitHub Pages の source は `GitHub Actions` を使う。
+- 初回デプロイは最初の push 後に一度起動する必要がある。
+- repository を private のまま使うなら、GitHub プランが private GitHub Pages をサポートしている必要がある。
 
-## Data Contract
+## データ契約
 
-`docs/data/status.json` should always contain these keys:
+`docs/data/status.json` には常に次のキーが入る。
 
-- `status`: `ok` or `error`
-- `fetchedAt`: UTC timestamp in ISO 8601 format
-- `message`: top-level human-readable fetch result
+- `status`: `ok` または `error`
+- `fetchedAt`: ISO 8601 形式の UTC timestamp
+- `message`: 取得結果を示すトップレベル文言
 - `hasLiveData`: boolean
 - `route.fromStop.id`: `16240`
 - `route.toStop.id`: `16244`
-- `source.url`: upstream result URL
-- `details`: flattened text extracted from the source page
+- `source.url`: upstream の結果 URL
+- `details`: 元ページから抽出した平坦化済みテキスト
 
-## Operational Risks
+## 運用リスク
 
-- Upstream HTML may change without notice and break parsing.
-- GitHub Actions cron is not exact real-time scheduling; runs can drift.
-- Scheduled workflows only run on the default branch.
-- GitHub Pages may remain unpublished until the first successful deploy completes.
-- At off-hours there may be no active bus approach data, so a successful fetch can still show `該当する情報は現在ありません。`.
+- upstream の HTML は予告なく変わり、解析が壊れる可能性がある。
+- GitHub Actions cron は厳密なリアルタイム実行ではなく、実行時刻にズレが出る。
+- scheduled workflow は default branch でのみ動く。
+- GitHub Pages は初回 deploy 成功まで未公開のままになりうる。
+- 運行時間外は、取得自体が成功していても `該当する情報は現在ありません。` になることがある。
 
-## Verification Commands
+## 確認コマンド
 
-Generate the snapshot locally:
+ローカルでスナップショットを生成する。
 
 ```bash
 python3 scripts/fetch_bus_data.py --output docs/data/status.json
 ```
 
-Preview the site locally:
+ローカルでサイトを確認する。
 
 ```bash
 python3 -m http.server 8000 --directory docs
 ```
 
-Inspect Pages configuration after first deployment:
+初回デプロイ後に Pages 設定を確認する。
 
 ```bash
 gh api repos/Npieju/bus-tracer/pages

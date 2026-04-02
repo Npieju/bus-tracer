@@ -1,46 +1,46 @@
-# Bus Tracer Plan
+# Bus Tracer 計画
 
-## Current State
+## 現在の状態
 
-- Static GitHub Pages app is implemented.
-- Scheduled GitHub Actions deployment is implemented.
-- Scraper validation is implemented.
-- Local snapshot generation works.
-- First production deploy has not been validated yet.
-- Real bus-running-hours validation has not been performed yet.
+- 静的な GitHub Pages アプリは実装済み。
+- 定期 GitHub Actions デプロイは実装済み。
+- スクレイパーの検証は実装済み。
+- ローカルでのスナップショット生成は動作済み。
+- 初回本番デプロイはまだ未確認。
+- 実際のバス運行時間帯での確認はまだ未実施。
 
-## Immediate Goal
+## 直近の目標
 
-Get the repository into a state where the first production deploy can be triggered without additional setup work inside the codebase.
+コードベース側で追加作業をせずに、初回本番デプロイを起動できる状態にする。
 
-## Release Steps
+## リリース手順
 
-1. Commit the current workspace changes.
-2. Push `main` to `origin`.
-3. In GitHub repository settings, confirm `Pages -> Source = GitHub Actions`.
-4. Run the `Deploy GitHub Pages` workflow manually once.
-5. Confirm the published site and `data/status.json` are reachable.
+1. 現在の workspace 変更を commit する。
+2. `main` を `origin` に push する。
+3. GitHub repository settings で `Pages -> Source = GitHub Actions` を確認する。
+4. `Deploy GitHub Pages` workflow を一度手動実行する。
+5. 公開されたサイトと `data/status.json` にアクセスできることを確認する。
 
-## Production Validation Plan
+## 本番確認手順
 
-1. Wait until buses are actually operating on the tracked route.
-2. Open the published page and the upstream Kanachu page side by side.
-3. Confirm the route labels are correct.
-4. Confirm the status message and details match the upstream page.
-5. Leave the page open long enough to confirm the browser-side 5-minute refresh.
-6. Check the latest GitHub Actions run summary for fetch status.
+1. 対象ルートで実際にバスが走っている時間帯を待つ。
+2. 公開ページと upstream の神奈中ページを並べて開く。
+3. ルート表示が正しいことを確認する。
+4. ステータスメッセージと details が upstream と一致することを確認する。
+5. ブラウザ側の 5 分更新を確認できるまでページを開いたままにする。
+6. 直近の GitHub Actions run summary で取得状態を確認する。
 
-## Open TODOs
+## 残 TODO
 
-- Verify the first GitHub Pages deployment succeeds on GitHub.
-- Confirm whether the repository will stay private or become public.
-- Decide whether historical snapshots should be preserved or whether latest-state-only is enough.
-- Optionally add a health badge or status note once the public URL is known.
-- Optionally add tests around parser extraction if upstream instability becomes a recurring issue.
+- 初回 GitHub Pages デプロイが GitHub 上で成功することを確認する。
+- repository visibility が public に変更済みであることを前提に Pages 有効化を再確認する。
+- 履歴スナップショットを残すか、latest-state-only でよいか決める。
+- 公開 URL が確定したら health badge や status note の追加を検討する。
+- upstream 不安定化が繰り返すなら parser 抽出テスト追加を検討する。
 
-## Decision Log
+## 決定事項
 
-- No dedicated deployment branch is needed.
-- No commit/push hook is required for periodic updates.
-- Scheduled GitHub Actions is the authoritative update mechanism.
-- The route is intentionally fixed for now.
+- 専用デプロイ branch は作らない。
+- 定期更新に commit/push hook は使わない。
+- 定期更新の正本は scheduled GitHub Actions とする。
+- ルートは当面固定とする。

@@ -68,11 +68,11 @@ function renderPayload(payload) {
   updatedAtEl.textContent = formatDateTime(payload.fetchedAt);
 
   if (payload.status === "error") {
-    setTone("tone-error", "Fetch Error");
+    setTone("tone-error", "取得失敗");
   } else if (payload.hasLiveData) {
-    setTone("tone-ok", "Live Data");
+    setTone("tone-ok", "運行情報あり");
   } else {
-    setTone("tone-warn", "No Bus Nearby");
+    setTone("tone-warn", "接近情報なし");
   }
 
   renderDetails(payload.details);
