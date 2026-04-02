@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bus Tracer | 伊勢山 -> 大野農協前</title>
+    <meta
+      name="description"
+      content="伊勢山（平塚市）から大野農協前（平塚市）までの神奈中バス接近情報を5分ごとに更新するページ。"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="ambient ambient-a"></div>
+      <div class="ambient ambient-b"></div>
+
+      <main class="layout">
+        <section class="hero panel">
+          <p class="eyebrow">KANACHU BUS TRACKER</p>
+          <h1>伊勢山 <span>-></span> 大野農協前</h1>
+          <p class="lede">
+            GitHub Pages上で動く固定ルートのバス接近ビューです。公開データはGitHub Actionsで5分ごとに更新し、開いたままの画面も5分おきに再読込します。
+          </p>
+
+          <div class="hero-grid">
+            <div class="metric-card emphasis">
+              <div class="metric-label">現在の状態</div>
+              <div class="metric-value" id="status-message">読み込み中...</div>
+              <div class="pill" id="status-pill">Updating</div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-label">最終取得</div>
+              <div class="metric-value small" id="updated-at">--</div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-label">次回ブラウザ更新</div>
+              <div class="metric-value small" id="countdown">--:--</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="route-strip panel">
+          <div>
+            <div class="route-label">乗車</div>
+            <div class="route-stop" id="from-stop">伊勢山（平塚市）</div>
+          </div>
+          <div class="route-arrow">→</div>
+          <div>
+            <div class="route-label">降車</div>
+            <div class="route-stop" id="to-stop">大野農協前（平塚市）</div>
+          </div>
+        </section>
+
+        <section class="details panel">
+          <div class="section-head">
+            <h2>取得内容</h2>
+            <a id="source-link" href="https://real.kanachu.jp/pc/top" target="_blank" rel="noreferrer">元サイトを開く</a>
+          </div>
+          <ul class="detail-list" id="detail-list">
+            <li>データを読んでいます...</li>
+          </ul>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

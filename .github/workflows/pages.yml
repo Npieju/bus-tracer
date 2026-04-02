@@ -1,0 +1,94 @@
+name: Deploy GitHub Pages
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/5 * * * *"
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - docs/**
+      - scripts/**
+      - .github/workflows/pages.yml
+      - README.md
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Generate bus status JSON
+        run: python scripts/fetch_bus_data.py --output docs/data/status.json
+
+      - name: Validate generated JSON
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          data = json.loads(Path("docs/data/status.json").read_text(encoding="utf-8"))
+          assert data["route"]["fromStop"]["id"] == "16240"
+          assert data["route"]["toStop"]["id"] == "16244"
+          assert data["status"] in {"ok", "error"}
+          assert isinstance(data["details"], list)
+          print(json.dumps({
+              "status": data["status"],
+              "message": data["message"],
+              "fetchedAt": data["fetchedAt"],
+          }, ensure_ascii=False))
+          PY
+
+      - name: Write workflow summary
+        run: |
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          from pathlib import Path
+
+          data = json.loads(Path("docs/data/status.json").read_text(encoding="utf-8"))
+          print("## Bus status snapshot")
+          print()
+          print(f"- status: {data['status']}")
+          print(f"- message: {data['message']}")
+          print(f"- fetchedAt: {data['fetchedAt']}")
+          print(f"- source: {data['source']['url']}")
+          PY
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
