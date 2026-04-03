@@ -24,6 +24,10 @@ ACCESSIBILITY_LABELS = {
     "★": "ワンステップ",
     "Ｔ": "TwinLiner",
 }
+TIME_RE = re.compile(r"(\d{1,2}:\d{2})")
+DELAY_RE = re.compile(r"(\d+)分\s*遅れ")
+ARRIVAL_MINUTES_RE = re.compile(r"あと\s*(\d+)分\s*で到着")
+DEPARTURE_TIME_RE = re.compile(r"(\d{1,2}:\d{2})発予定")
 
 IGNORED_LINES = {
     "トップ",
@@ -204,6 +208,22 @@ def parse_journey_block(lines: list[str]) -> tuple[dict[str, object], list[str]]
     status_notes = [line for line in body_lines if is_status_note(line)]
     stop_list = [line for line in body_lines if not is_status_note(line)]
 
+    expected_arrival_time = extract_time_text(arrival_scheduled or headline)
+    source_updated_time = extract_time_text(lines[updated_index] if updated_index != -1 else None)
+    departure_time = extract_time_text(headline) if headline and "発予定" in headline else None
+    delay_minutes = extract_delay_minutes(status_notes)
+    arrival_in_minutes = extract_arrival_minutes(headline)
+    scheduled_arrival_time = expected_arrival_time
+    if expected_arrival_time and delay_minutes is not None:
+        scheduled_arrival_time = add_minutes_to_time(expected_arrival_time, -delay_minutes)
+
+    if not expected_arrival_time and source_updated_time and arrival_in_minutes is not None:
+        expected_arrival_time = add_minutes_to_time(source_updated_time, arrival_in_minutes)
+        if delay_minutes is None:
+            scheduled_arrival_time = expected_arrival_time
+        else:
+            scheduled_arrival_time = add_minutes_to_time(expected_arrival_time, -delay_minutes)
+
     journey = {
         "rank": rank,
         "route": lines[route_index + 1] if route_index != -1 and route_index + 1 < len(lines) else None,
@@ -220,9 +240,49 @@ def parse_journey_block(lines: list[str]) -> tuple[dict[str, object], list[str]]
         "headline": headline,
         "statusNotes": status_notes,
         "stops": stop_list,
+        "departureScheduledTime": departure_time,
+        "sourceUpdatedTime": source_updated_time,
+        "arrivalInMinutes": arrival_in_minutes,
+        "delayMinutes": delay_minutes,
+        "scheduledArrivalTime": scheduled_arrival_time,
+        "expectedArrivalTime": expected_arrival_time,
         "arrivalScheduled": arrival_scheduled,
     }
     return journey, notices
+
+
+def extract_time_text(value: str | None) -> str | None:
+    if not value:
+        return None
+    match = TIME_RE.search(value)
+    if not match:
+        return None
+    hours, minutes = match.group(1).split(":", 1)
+    return f"{int(hours):02d}:{minutes}"
+
+
+def extract_delay_minutes(lines: list[str]) -> int | None:
+    for line in lines:
+        match = DELAY_RE.search(line)
+        if match:
+            return int(match.group(1))
+    return None
+
+
+def extract_arrival_minutes(value: str | None) -> int | None:
+    if not value:
+        return None
+    match = ARRIVAL_MINUTES_RE.search(value)
+    if not match:
+        return None
+    return int(match.group(1))
+
+
+def add_minutes_to_time(time_text: str, minutes: int) -> str:
+    hour_text, minute_text = time_text.split(":", 1)
+    total = int(hour_text) * 60 + int(minute_text) + minutes
+    total %= 24 * 60
+    return f"{total // 60:02d}:{total % 60:02d}"
 
 
 def parse_structured_details(details: list[str]) -> tuple[list[str], list[str], list[dict[str, object]]]:

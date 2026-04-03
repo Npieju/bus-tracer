@@ -169,7 +169,7 @@ body {
 .refresh-note {
   margin: 1rem 0 0;
   color: var(--muted);
-  font-size: 0.95rem;
+  font-size: 0.88rem;
 }
 
 .refresh-note span {
@@ -255,6 +255,38 @@ body {
   line-height: 1.8;
 }
 
+.arrival-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.arrival-box {
+  padding: 1rem 1.05rem;
+  border-radius: 22px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.62);
+}
+
+.arrival-box.expected {
+  background: linear-gradient(145deg, rgba(191, 90, 54, 0.16), rgba(255, 255, 255, 0.84));
+}
+
+.arrival-label {
+  color: var(--muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+}
+
+.arrival-time {
+  margin-top: 0.45rem;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: clamp(1.35rem, 3vw, 2.25rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+}
+
 .next-journey,
 .journey-list,
 .notes {
@@ -327,6 +359,7 @@ body {
   margin: 0.6rem 0 0;
   color: var(--accent-strong);
   font-weight: 600;
+  line-height: 1.7;
 }
 
 .journey-meta {
@@ -451,7 +484,8 @@ body {
   }
 
   .journey-grid,
-  .journey-meta {
+  .journey-meta,
+  .arrival-summary {
     grid-template-columns: 1fr;
   }
 }

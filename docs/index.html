@@ -52,7 +52,7 @@
             </div>
           </div>
 
-          <p class="refresh-note">次回ブラウザ更新まで <span id="countdown">--:--</span></p>
+          <p class="refresh-note">ブラウザ再取得まで <span id="countdown">--:--</span></p>
         </section>
 
         <section class="route-strip panel">
@@ -73,6 +73,20 @@
             <span class="section-note" id="next-journey-note">--</span>
           </div>
           <div id="overview-text" class="overview-text"></div>
+          <div class="arrival-summary" id="arrival-summary">
+            <div class="arrival-box timetable">
+              <div class="arrival-label">時刻表上の到着</div>
+              <div class="arrival-time" id="scheduled-arrival-time">--:--</div>
+            </div>
+            <div class="arrival-box delay">
+              <div class="arrival-label">遅れ見込み</div>
+              <div class="arrival-time" id="delay-minutes">--</div>
+            </div>
+            <div class="arrival-box expected">
+              <div class="arrival-label">実際の到着見込み</div>
+              <div class="arrival-time" id="expected-arrival-time">--:--</div>
+            </div>
+          </div>
           <div id="next-journey">データを読んでいます...</div>
         </section>
 

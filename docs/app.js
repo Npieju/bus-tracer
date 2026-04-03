@@ -9,6 +9,9 @@ const journeyCountEl = document.querySelector("#journey-count");
 const countdownEl = document.querySelector("#countdown");
 const detailListEl = document.querySelector("#detail-list");
 const overviewTextEl = document.querySelector("#overview-text");
+const scheduledArrivalTimeEl = document.querySelector("#scheduled-arrival-time");
+const delayMinutesEl = document.querySelector("#delay-minutes");
+const expectedArrivalTimeEl = document.querySelector("#expected-arrival-time");
 const nextJourneySectionEl = document.querySelector("#next-journey-section");
 const nextJourneyNoteEl = document.querySelector("#next-journey-note");
 const nextJourneyEl = document.querySelector("#next-journey");
@@ -70,6 +73,18 @@ function formatSourceUpdated(value) {
   return text || "--";
 }
 
+function formatDelayMinutes(value) {
+  if (typeof value === "number") {
+    return value === 0 ? "ほぼ定刻" : `${value}分遅れ`;
+  }
+  return "遅れ情報なし";
+}
+
+function formatTimeValue(value) {
+  const text = normalizeText(value);
+  return text || "--:--";
+}
+
 function renderDetails(items) {
   detailListEl.innerHTML = "";
 
@@ -112,7 +127,12 @@ function buildJourneyCardMarkup(journey, featured = false) {
   const summary = [journey.destination ? `${journey.destination} 行` : "", journey.via ? `${journey.via} 経由` : ""]
     .filter(Boolean)
     .join(" / ");
-  const subline = [...(journey.statusNotes ?? []), journey.arrivalScheduled]
+  const subline = [
+    journey.scheduledArrivalTime ? `時刻表 ${journey.scheduledArrivalTime}` : "",
+    typeof journey.delayMinutes === "number" ? formatDelayMinutes(journey.delayMinutes) : "",
+    journey.expectedArrivalTime ? `到着見込み ${journey.expectedArrivalTime}` : journey.arrivalScheduled,
+    ...(journey.statusNotes ?? []),
+  ]
     .filter(Boolean)
     .map((entry) => normalizeText(entry))
     .join(" / ");
@@ -135,6 +155,8 @@ function buildJourneyCardMarkup(journey, featured = false) {
       ${summary ? `<p class="journey-destination">${escapeHtml(summary)}</p>` : ""}
       ${subline ? `<p class="journey-subline">${escapeHtml(subline)}</p>` : ""}
       <dl class="journey-meta">
+        <div><dt>到着見込み</dt><dd>${escapeHtml(formatTimeValue(journey.expectedArrivalTime))}</dd></div>
+        <div><dt>遅れ見込み</dt><dd>${escapeHtml(formatDelayMinutes(journey.delayMinutes))}</dd></div>
         <div><dt>所要</dt><dd>${escapeHtml(normalizeText([journey.duration, journey.durationNote].filter(Boolean).join(" ")) || "--")}</dd></div>
         <div><dt>現金</dt><dd>${escapeHtml(journey.cashFare ?? "--")}</dd></div>
         <div><dt>IC</dt><dd>${escapeHtml(journey.icFare ?? "--")}</dd></div>
@@ -153,8 +175,11 @@ function renderJourneys(journeys) {
 
   journeyCountEl.textContent = `${items.length}件`;
   journeyCountInlineEl.textContent = items.length > 0 ? `${items.length}件を表示` : "便なし";
-  nextJourneyNoteEl.textContent = featured?.route ? `系統 ${featured.route}` : "--";
+  nextJourneyNoteEl.textContent = featured?.route ? `系統 ${featured.route} / ${featured.destination ?? "行先不明"}` : "--";
   sourceUpdatedEl.textContent = formatSourceUpdated(featured?.updatedAtText);
+  scheduledArrivalTimeEl.textContent = formatTimeValue(featured?.scheduledArrivalTime);
+  delayMinutesEl.textContent = formatDelayMinutes(featured?.delayMinutes);
+  expectedArrivalTimeEl.textContent = formatTimeValue(featured?.expectedArrivalTime);
 
   if (!featured) {
     nextJourneySectionEl.hidden = true;
@@ -178,7 +203,9 @@ function renderPayload(payload) {
   toStopEl.textContent = payload.route?.toStop?.name ?? "大野農協前（平塚市）";
   sourceLinkEl.href = payload.source?.url ?? "https://real.kanachu.jp/pc/top";
 
-  statusMessageEl.textContent = normalizeText(journeys[0]?.headline ?? payload.message ?? "情報を取得できませんでした。");
+  statusMessageEl.textContent = journeys[0]?.expectedArrivalTime
+    ? `${journeys[0].expectedArrivalTime} 着見込み`
+    : normalizeText(payload.message ?? "情報を取得できませんでした。");
   updatedAtEl.textContent = formatDateTime(payload.fetchedAt);
   overviewTextEl.textContent = overview.join(" ");
 
