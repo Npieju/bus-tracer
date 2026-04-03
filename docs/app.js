@@ -4,8 +4,18 @@ const REFRESH_INTERVAL_MS = 5 * 60 * 1000;
 const statusMessageEl = document.querySelector("#status-message");
 const statusPillEl = document.querySelector("#status-pill");
 const updatedAtEl = document.querySelector("#updated-at");
+const sourceUpdatedEl = document.querySelector("#source-updated");
+const journeyCountEl = document.querySelector("#journey-count");
 const countdownEl = document.querySelector("#countdown");
 const detailListEl = document.querySelector("#detail-list");
+const overviewTextEl = document.querySelector("#overview-text");
+const nextJourneySectionEl = document.querySelector("#next-journey-section");
+const nextJourneyNoteEl = document.querySelector("#next-journey-note");
+const nextJourneyEl = document.querySelector("#next-journey");
+const journeyListSectionEl = document.querySelector("#journey-list-section");
+const journeyCountInlineEl = document.querySelector("#journey-count-inline");
+const journeyGridEl = document.querySelector("#journey-grid");
+const noticeListEl = document.querySelector("#notice-list");
 const fromStopEl = document.querySelector("#from-stop");
 const toStopEl = document.querySelector("#to-stop");
 const sourceLinkEl = document.querySelector("#source-link");
@@ -42,6 +52,24 @@ function setTone(className, label) {
   statusPillEl.textContent = label;
 }
 
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function normalizeText(value) {
+  return String(value ?? "").replace(/\s+/g, " ").trim();
+}
+
+function formatSourceUpdated(value) {
+  const text = normalizeText(value);
+  return text || "--";
+}
+
 function renderDetails(items) {
   detailListEl.innerHTML = "";
 
@@ -59,13 +87,100 @@ function renderDetails(items) {
   }
 }
 
+function renderNoticeList(items) {
+  noticeListEl.innerHTML = "";
+
+  const notices = Array.isArray(items) ? items.filter(Boolean) : [];
+  if (!notices.length) {
+    const item = document.createElement("li");
+    item.textContent = "追加の注意事項はありません。";
+    noticeListEl.append(item);
+    return;
+  }
+
+  for (const entry of notices) {
+    const item = document.createElement("li");
+    item.textContent = entry;
+    noticeListEl.append(item);
+  }
+}
+
+function buildJourneyCardMarkup(journey, featured = false) {
+  const vehicleBadge = journey.vehicleMark && journey.accessibilityLabel
+    ? `${journey.vehicleMark} ${journey.accessibilityLabel}`
+    : journey.vehicleMark || "";
+  const summary = [journey.destination ? `${journey.destination} 行` : "", journey.via ? `${journey.via} 経由` : ""]
+    .filter(Boolean)
+    .join(" / ");
+  const subline = [...(journey.statusNotes ?? []), journey.arrivalScheduled]
+    .filter(Boolean)
+    .map((entry) => normalizeText(entry))
+    .join(" / ");
+  const stops = Array.isArray(journey.stops) ? journey.stops : [];
+  const stopMarkup = stops
+    .map((stop, index) => {
+      const className = index === stops.length - 1 ? "stop-chip current" : "stop-chip";
+      return `<span class="${className}">${escapeHtml(stop)}</span>`;
+    })
+    .join("");
+
+  return `
+    <article class="journey-card${featured ? " featured" : ""}">
+      <div class="journey-bar">
+        <span class="journey-rank">早い順 ${escapeHtml(journey.rank)}</span>
+        <span class="journey-route">${escapeHtml(journey.route ?? "--")}</span>
+        ${vehicleBadge ? `<span class="journey-vehicle">${escapeHtml(vehicleBadge)}</span>` : ""}
+      </div>
+      <${featured ? "h3" : "h4"} class="journey-headline">${escapeHtml(normalizeText(journey.headline ?? "接近情報を確認中"))}</${featured ? "h3" : "h4"}>
+      ${summary ? `<p class="journey-destination">${escapeHtml(summary)}</p>` : ""}
+      ${subline ? `<p class="journey-subline">${escapeHtml(subline)}</p>` : ""}
+      <dl class="journey-meta">
+        <div><dt>所要</dt><dd>${escapeHtml(normalizeText([journey.duration, journey.durationNote].filter(Boolean).join(" ")) || "--")}</dd></div>
+        <div><dt>現金</dt><dd>${escapeHtml(journey.cashFare ?? "--")}</dd></div>
+        <div><dt>IC</dt><dd>${escapeHtml(journey.icFare ?? "--")}</dd></div>
+        <div><dt>車両</dt><dd>${escapeHtml(journey.vehicleNumber ?? "--")}</dd></div>
+      </dl>
+      ${stopMarkup ? `<div class="journey-stops">${stopMarkup}</div>` : ""}
+      ${journey.updatedAtText ? `<p class="journey-updated">${escapeHtml(normalizeText(journey.updatedAtText))}</p>` : ""}
+    </article>
+  `;
+}
+
+function renderJourneys(journeys) {
+  const items = Array.isArray(journeys) ? journeys : [];
+  const featured = items[0];
+  const remaining = items.slice(1);
+
+  journeyCountEl.textContent = `${items.length}件`;
+  journeyCountInlineEl.textContent = items.length > 0 ? `${items.length}件を表示` : "便なし";
+  nextJourneyNoteEl.textContent = featured?.route ? `系統 ${featured.route}` : "--";
+  sourceUpdatedEl.textContent = formatSourceUpdated(featured?.updatedAtText);
+
+  if (!featured) {
+    nextJourneySectionEl.hidden = true;
+    journeyListSectionEl.hidden = true;
+    nextJourneyEl.textContent = "現在表示できる便はありません。";
+    journeyGridEl.innerHTML = "";
+    return;
+  }
+
+  nextJourneySectionEl.hidden = false;
+  journeyListSectionEl.hidden = remaining.length === 0;
+  nextJourneyEl.innerHTML = buildJourneyCardMarkup(featured, true);
+  journeyGridEl.innerHTML = remaining.map((journey) => buildJourneyCardMarkup(journey)).join("");
+}
+
 function renderPayload(payload) {
+  const journeys = Array.isArray(payload.journeys) ? payload.journeys : [];
+  const overview = Array.isArray(payload.overview) ? payload.overview : [];
+
   fromStopEl.textContent = payload.route?.fromStop?.name ?? "伊勢山（平塚市）";
   toStopEl.textContent = payload.route?.toStop?.name ?? "大野農協前（平塚市）";
   sourceLinkEl.href = payload.source?.url ?? "https://real.kanachu.jp/pc/top";
 
-  statusMessageEl.textContent = payload.message ?? "情報を取得できませんでした。";
+  statusMessageEl.textContent = normalizeText(journeys[0]?.headline ?? payload.message ?? "情報を取得できませんでした。");
   updatedAtEl.textContent = formatDateTime(payload.fetchedAt);
+  overviewTextEl.textContent = overview.join(" ");
 
   if (payload.status === "error") {
     setTone("tone-error", "取得失敗");
@@ -75,6 +190,8 @@ function renderPayload(payload) {
     setTone("tone-warn", "接近情報なし");
   }
 
+  renderJourneys(journeys);
+  renderNoticeList(payload.notices);
   renderDetails(payload.details);
 }
 
@@ -104,6 +221,9 @@ async function refresh() {
         toStop: { name: "大野農協前（平塚市）" },
       },
       source: { url: "https://real.kanachu.jp/pc/top" },
+      overview: [],
+      notices: [],
+      journeys: [],
       details: [error instanceof Error ? error.message : String(error)],
     });
     nextRefreshAt = Date.now() + REFRESH_INTERVAL_MS;

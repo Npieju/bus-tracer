@@ -18,6 +18,12 @@ TO_STOP_ID = "16244"
 FROM_STOP_NAME = "伊勢山（平塚市）"
 TO_STOP_NAME = "大野農協前（平塚市）"
 SITE_ERROR_TEXT = "以下のエラーが発生しました"
+JOURNEY_START_RE = re.compile(r"^早い順\s+(\d+)$")
+ACCESSIBILITY_LABELS = {
+    "※": "ノンステップ",
+    "★": "ワンステップ",
+    "Ｔ": "TwinLiner",
+}
 
 IGNORED_LINES = {
     "トップ",
@@ -121,6 +127,131 @@ def html_to_lines(fragment: str) -> list[str]:
     return lines
 
 
+def unique_preserving_order(items: list[str]) -> list[str]:
+    seen: set[str] = set()
+    result: list[str] = []
+    for item in items:
+        if item in seen:
+            continue
+        seen.add(item)
+        result.append(item)
+    return result
+
+
+def extract_overview(details: list[str]) -> list[str]:
+    overview: list[str] = []
+    for line in details:
+        if JOURNEY_START_RE.match(line):
+            break
+        if "接近情報です。" in line or "御利用下さい" in line:
+            overview.append(line)
+    return overview
+
+
+def find_label(lines: list[str], label: str, start: int = 0) -> int:
+    for index in range(start, len(lines)):
+        if lines[index] == label:
+            return index
+    return -1
+
+
+def parse_journey_block(lines: list[str]) -> tuple[dict[str, object], list[str]]:
+    rank_match = JOURNEY_START_RE.match(lines[0])
+    if not rank_match:
+        raise RuntimeError("便ブロックの先頭を解釈できませんでした。")
+
+    rank = int(rank_match.group(1))
+
+    route_index = find_label(lines, "系統")
+    destination_index = find_label(lines, "行き先")
+    via_index = find_label(lines, "経由")
+    vehicle_index = find_label(lines, "車両番号")
+    duration_index = find_label(lines, "所要時分")
+    cash_index = find_label(lines, "現金")
+    ic_index = find_label(lines, "IC")
+    updated_index = next((index for index, line in enumerate(lines) if "最終更新" in line), -1)
+
+    vehicle_mark = None
+    if vehicle_index != -1 and vehicle_index + 2 < len(lines) and lines[vehicle_index + 2] in ACCESSIBILITY_LABELS:
+        vehicle_mark = lines[vehicle_index + 2]
+
+    duration_note = None
+    if duration_index != -1 and duration_index + 2 < len(lines) and lines[duration_index + 2].startswith("（"):
+        duration_note = lines[duration_index + 2]
+
+    notices_start = ic_index + 2 if ic_index != -1 else -1
+    notices = unique_preserving_order(lines[notices_start:updated_index]) if notices_start != -1 and updated_index != -1 else []
+
+    tail = lines[updated_index + 1 :] if updated_index != -1 else []
+    headline = tail[0] if tail else None
+    body_lines = tail[1:] if len(tail) > 1 else []
+
+    arrival_scheduled = None
+    if body_lines and "着予定" in body_lines[-1]:
+        arrival_scheduled = body_lines[-1]
+        body_lines = body_lines[:-1]
+
+    def is_status_note(line: str) -> bool:
+        return (
+            line.startswith("（")
+            or line.startswith("(")
+            or "遅れ" in line
+            or "運行中" in line
+            or "発車します" in line
+            or "発車から" in line
+        )
+
+    status_notes = [line for line in body_lines if is_status_note(line)]
+    stop_list = [line for line in body_lines if not is_status_note(line)]
+
+    journey = {
+        "rank": rank,
+        "route": lines[route_index + 1] if route_index != -1 and route_index + 1 < len(lines) else None,
+        "destination": lines[destination_index + 1] if destination_index != -1 and destination_index + 1 < len(lines) else None,
+        "via": lines[via_index + 1] if via_index != -1 and via_index + 1 < len(lines) else None,
+        "vehicleNumber": lines[vehicle_index + 1] if vehicle_index != -1 and vehicle_index + 1 < len(lines) else None,
+        "vehicleMark": vehicle_mark,
+        "accessibilityLabel": ACCESSIBILITY_LABELS.get(vehicle_mark),
+        "duration": lines[duration_index + 1] if duration_index != -1 and duration_index + 1 < len(lines) else None,
+        "durationNote": duration_note,
+        "cashFare": lines[cash_index + 1] if cash_index != -1 and cash_index + 1 < len(lines) else None,
+        "icFare": lines[ic_index + 1] if ic_index != -1 and ic_index + 1 < len(lines) else None,
+        "updatedAtText": lines[updated_index] if updated_index != -1 else None,
+        "headline": headline,
+        "statusNotes": status_notes,
+        "stops": stop_list,
+        "arrivalScheduled": arrival_scheduled,
+    }
+    return journey, notices
+
+
+def parse_structured_details(details: list[str]) -> tuple[list[str], list[str], list[dict[str, object]]]:
+    overview = extract_overview(details)
+
+    blocks: list[list[str]] = []
+    current: list[str] = []
+    for line in details:
+        if JOURNEY_START_RE.match(line):
+            if current:
+                blocks.append(current)
+            current = [line]
+            continue
+        if current:
+            current.append(line)
+    if current:
+        blocks.append(current)
+
+    journeys: list[dict[str, object]] = []
+    notices: list[str] = []
+    for block in blocks:
+        journey, block_notices = parse_journey_block(block)
+        journeys.append(journey)
+        if not notices and block_notices:
+            notices = block_notices
+
+    return overview, notices, journeys
+
+
 def parse_payload(route: RouteConfig, page_html: str) -> dict[str, object]:
     if SITE_ERROR_TEXT in page_html:
         raise RuntimeError("神奈中サイトがエラーページを返しました。")
@@ -129,6 +260,7 @@ def parse_payload(route: RouteConfig, page_html: str) -> dict[str, object]:
     message = extract_first(r'<p class="color01">\s*<strong>(.*?)</strong>\s*</p>', page_html)
     main_fragment = extract_main_fragment(page_html)
     details = html_to_lines(main_fragment)
+    overview, notices, journeys = parse_structured_details(details)
 
     if details and details[0].startswith("トップ >"):
         details = details[1:]
@@ -147,6 +279,9 @@ def parse_payload(route: RouteConfig, page_html: str) -> dict[str, object]:
             "url": route.source_url,
             "pageTitle": page_title,
         },
+        "overview": overview,
+        "notices": notices,
+        "journeys": journeys,
         "details": details,
     }
     return payload
@@ -163,6 +298,10 @@ def validate_payload(route: RouteConfig, payload: dict[str, object]) -> None:
 
     if not isinstance(details, list) or not details:
         raise RuntimeError("接近情報の明細を抽出できませんでした。")
+
+    journeys = payload.get("journeys")
+    if payload.get("hasLiveData") and (not isinstance(journeys, list) or not journeys):
+        raise RuntimeError("運行情報ありなのに便一覧を構造化できませんでした。")
 
     joined = "\n".join(str(item) for item in details)
     if from_label not in joined or to_label not in joined:
@@ -184,6 +323,9 @@ def build_error_payload(route: RouteConfig, exc: Exception) -> dict[str, object]
             "url": route.source_url,
             "pageTitle": None,
         },
+        "overview": [],
+        "notices": [],
+        "journeys": [],
         "details": [str(exc)],
     }
 

@@ -19,6 +19,10 @@
   box-sizing: border-box;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 html,
 body {
   margin: 0;
@@ -116,7 +120,7 @@ body {
 .hero-grid {
   margin-top: 1.5rem;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1rem;
 }
 
@@ -162,6 +166,17 @@ body {
   font-weight: 600;
 }
 
+.refresh-note {
+  margin: 1rem 0 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.refresh-note span {
+  color: var(--accent-strong);
+  font-weight: 700;
+}
+
 .route-strip {
   padding: 1.25rem 1.5rem;
   display: grid;
@@ -203,6 +218,11 @@ body {
   font-size: 1.15rem;
 }
 
+.section-note {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
 .section-head a {
   color: var(--accent-strong);
   text-decoration: none;
@@ -229,6 +249,173 @@ body {
   line-height: 1.65;
 }
 
+.overview-text {
+  margin-top: 1rem;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.next-journey,
+.journey-list,
+.notes {
+  padding: 1.5rem;
+}
+
+.journey-card {
+  padding: 1.15rem;
+  border-radius: 24px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.62);
+}
+
+.journey-card.featured {
+  margin-top: 1rem;
+  padding: 1.35rem;
+  background: linear-gradient(145deg, rgba(31, 106, 72, 0.08), rgba(255, 255, 255, 0.84));
+}
+
+.journey-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.journey-rank,
+.journey-route,
+.journey-vehicle {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.journey-rank {
+  background: rgba(23, 32, 31, 0.08);
+}
+
+.journey-route {
+  background: rgba(191, 90, 54, 0.14);
+  color: var(--accent-strong);
+}
+
+.journey-vehicle {
+  background: rgba(31, 106, 72, 0.12);
+  color: var(--ok);
+}
+
+.journey-headline {
+  margin: 0.95rem 0 0;
+  font-size: clamp(1.35rem, 3vw, 2rem);
+  line-height: 1.3;
+}
+
+.journey-card:not(.featured) .journey-headline {
+  font-size: 1.05rem;
+}
+
+.journey-destination {
+  margin: 0.5rem 0 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.journey-subline {
+  margin: 0.6rem 0 0;
+  color: var(--accent-strong);
+  font-weight: 600;
+}
+
+.journey-meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0 0;
+}
+
+.journey-meta div {
+  padding: 0.8rem 0.9rem;
+  border-radius: 16px;
+  background: rgba(255, 250, 241, 0.88);
+  border: 1px solid rgba(23, 32, 31, 0.06);
+}
+
+.journey-meta dt {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.journey-meta dd {
+  margin: 0.35rem 0 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.journey-stops {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.stop-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(23, 32, 31, 0.06);
+  font-size: 0.88rem;
+}
+
+.stop-chip.current {
+  background: rgba(191, 90, 54, 0.16);
+  color: var(--accent-strong);
+  font-weight: 700;
+}
+
+.journey-updated {
+  margin: 1rem 0 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.journey-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.notice-list {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.notice-list li {
+  padding: 1rem 1.1rem;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.56);
+  border: 1px solid var(--line);
+  line-height: 1.7;
+}
+
+.raw-details {
+  margin-top: 1rem;
+}
+
+.raw-details summary {
+  cursor: pointer;
+  color: var(--accent-strong);
+  font-weight: 700;
+}
+
 .tone-ok {
   background: rgba(31, 106, 72, 0.12);
   color: var(--ok);
@@ -246,7 +433,7 @@ body {
 
 @media (max-width: 860px) {
   .hero-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .route-strip {
@@ -261,6 +448,17 @@ body {
   .section-head {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .journey-grid,
+  .journey-meta {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
   }
 }
 
