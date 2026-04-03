@@ -85,6 +85,45 @@ function formatTimeValue(value) {
   return text || "--:--";
 }
 
+function buildPrimaryHeadline(journey, featured = false) {
+  if (journey?.expectedArrivalTime) {
+    return featured ? `${journey.expectedArrivalTime} 着見込み` : `${journey.expectedArrivalTime} 到着見込み`;
+  }
+
+  if (journey?.scheduledArrivalTime) {
+    return featured ? `${journey.scheduledArrivalTime} 到着予定` : `${journey.scheduledArrivalTime} 着予定`;
+  }
+
+  return normalizeText(journey?.destination ?? "接近情報を確認中");
+}
+
+function buildStatusLine(journey) {
+  const headline = normalizeText(journey?.headline);
+  const parts = [];
+
+  if (headline.includes("運行中")) {
+    parts.push("現在運行中");
+  } else if (journey?.departureScheduledTime) {
+    parts.push(`${journey.departureScheduledTime} 発予定`);
+  } else if (headline && !headline.includes("あと")) {
+    parts.push(headline);
+  }
+
+  if (journey?.scheduledArrivalTime) {
+    parts.push(`時刻表 ${journey.scheduledArrivalTime}`);
+  }
+
+  if (typeof journey?.delayMinutes === "number") {
+    parts.push(formatDelayMinutes(journey.delayMinutes));
+  }
+
+  if (journey?.expectedArrivalTime) {
+    parts.push(`到着見込み ${journey.expectedArrivalTime}`);
+  }
+
+  return parts.filter(Boolean).join(" / ");
+}
+
 function renderDetails(items) {
   detailListEl.innerHTML = "";
 
@@ -127,13 +166,10 @@ function buildJourneyCardMarkup(journey, featured = false) {
   const summary = [journey.destination ? `${journey.destination} 行` : "", journey.via ? `${journey.via} 経由` : ""]
     .filter(Boolean)
     .join(" / ");
-  const subline = [
-    journey.scheduledArrivalTime ? `時刻表 ${journey.scheduledArrivalTime}` : "",
-    typeof journey.delayMinutes === "number" ? formatDelayMinutes(journey.delayMinutes) : "",
-    journey.expectedArrivalTime ? `到着見込み ${journey.expectedArrivalTime}` : journey.arrivalScheduled,
-    ...(journey.statusNotes ?? []),
-  ]
-    .filter(Boolean)
+  const primaryHeadline = buildPrimaryHeadline(journey, featured);
+  const statusLine = buildStatusLine(journey);
+  const secondaryLine = (journey.statusNotes ?? [])
+    .filter((entry) => !normalizeText(entry).includes("遅れ"))
     .map((entry) => normalizeText(entry))
     .join(" / ");
   const stops = Array.isArray(journey.stops) ? journey.stops : [];
@@ -151,9 +187,10 @@ function buildJourneyCardMarkup(journey, featured = false) {
         <span class="journey-route">${escapeHtml(journey.route ?? "--")}</span>
         ${vehicleBadge ? `<span class="journey-vehicle">${escapeHtml(vehicleBadge)}</span>` : ""}
       </div>
-      <${featured ? "h3" : "h4"} class="journey-headline">${escapeHtml(normalizeText(journey.headline ?? "接近情報を確認中"))}</${featured ? "h3" : "h4"}>
+      <${featured ? "h3" : "h4"} class="journey-headline">${escapeHtml(primaryHeadline)}</${featured ? "h3" : "h4"}>
       ${summary ? `<p class="journey-destination">${escapeHtml(summary)}</p>` : ""}
-      ${subline ? `<p class="journey-subline">${escapeHtml(subline)}</p>` : ""}
+      ${statusLine ? `<p class="journey-subline">${escapeHtml(statusLine)}</p>` : ""}
+      ${secondaryLine ? `<p class="journey-note">${escapeHtml(secondaryLine)}</p>` : ""}
       <dl class="journey-meta">
         <div><dt>到着見込み</dt><dd>${escapeHtml(formatTimeValue(journey.expectedArrivalTime))}</dd></div>
         <div><dt>遅れ見込み</dt><dd>${escapeHtml(formatDelayMinutes(journey.delayMinutes))}</dd></div>
