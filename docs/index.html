@@ -25,35 +25,21 @@
         <section class="hero panel">
           <p class="eyebrow">神奈中バストレーサー</p>
           <h1>固定ルート <span>-></span> 接近ビュー</h1>
-          <p class="lede">
-            GitHub Pages上で動く固定ルートのバス接近ビューです。公開データはGitHub Actionsで5分ごとに更新し、開いたままの画面も5分おきに再読込します。
-          </p>
-
-          <div class="hero-grid">
-            <div class="metric-card emphasis">
+          <div class="hero-status-block">
+            <div class="metric-card emphasis hero-status-card">
               <div class="metric-label">現在の状態</div>
               <div class="metric-value" id="status-message">読み込み中...</div>
               <div class="pill" id="status-pill">更新中</div>
             </div>
-
-            <div class="metric-card">
-              <div class="metric-label">データ取得</div>
-              <div class="metric-value small" id="updated-at">--</div>
-            </div>
-
-            <div class="metric-card">
-              <div class="metric-label">ソース最終更新</div>
-              <div class="metric-value small" id="source-updated">--</div>
-            </div>
-
-            <div class="metric-card">
-              <div class="metric-label">検出便数</div>
-              <div class="metric-value small" id="journey-count">--</div>
-            </div>
           </div>
 
           <div class="direction-switch" id="direction-switch" aria-label="表示方向の切替"></div>
-          <p class="refresh-note">ブラウザ再取得まで <span id="countdown">--:--</span></p>
+          <div class="hero-meta-strip" aria-label="取得メタ情報">
+            <span class="hero-meta-item"><span class="hero-meta-label">取得</span><span class="hero-meta-value" id="updated-at">--</span></span>
+            <span class="hero-meta-item"><span class="hero-meta-label">ソース</span><span class="hero-meta-value" id="source-updated">--</span></span>
+            <span class="hero-meta-item"><span class="hero-meta-label">便数</span><span class="hero-meta-value" id="journey-count">--</span></span>
+            <span class="hero-meta-item"><span class="hero-meta-label">再取得</span><span class="hero-meta-value" id="countdown">--:--</span></span>
+          </div>
         </section>
 
         <section class="route-strip panel">

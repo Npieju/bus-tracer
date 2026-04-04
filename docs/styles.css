@@ -109,19 +109,8 @@ body {
   color: var(--accent);
 }
 
-.lede {
-  max-width: 54rem;
-  margin: 0.55rem 0 0;
-  color: var(--muted);
-  font-size: 0.9rem;
-  line-height: 1.55;
-}
-
-.hero-grid {
-  margin-top: 0.8rem;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.55rem;
+.hero-status-block {
+  margin-top: 0.6rem;
 }
 
 .metric-card {
@@ -129,6 +118,10 @@ body {
   border-radius: 16px;
   border: 1px solid var(--line);
   background: var(--panel-strong);
+}
+
+.hero-status-card {
+  padding: 0.7rem 0.8rem;
 }
 
 .metric-card.emphasis {
@@ -149,10 +142,6 @@ body {
   line-height: 1.1;
 }
 
-.metric-value.small {
-  font-size: clamp(0.95rem, 2vw, 1.2rem);
-}
-
 .pill {
   display: inline-flex;
   align-items: center;
@@ -166,17 +155,11 @@ body {
   font-weight: 600;
 }
 
-.refresh-note {
-  margin: 0.55rem 0 0;
-  color: var(--muted);
-  font-size: 0.75rem;
-}
-
 .direction-switch {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
-  margin-top: 0.7rem;
+  margin-top: 0.45rem;
 }
 
 .direction-button {
@@ -198,9 +181,30 @@ body {
   border-color: rgba(191, 90, 54, 0.18);
 }
 
-.refresh-note span {
-  color: var(--accent-strong);
-  font-weight: 700;
+.hero-meta-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.55rem;
+  margin-top: 0.45rem;
+  color: var(--muted);
+}
+
+.hero-meta-item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.hero-meta-label {
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+
+.hero-meta-value {
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--text);
 }
 
 .route-strip {
@@ -578,10 +582,6 @@ body {
     gap: 0.55rem;
   }
 
-  .hero-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   .section-head {
     align-items: center;
     flex-direction: row;
@@ -612,14 +612,18 @@ body {
     padding: 0.68rem 0.72rem;
   }
 
-  .hero-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.4rem;
-  }
-
-  .lede,
   .overview-text {
     display: none;
+  }
+
+  .hero-meta-strip {
+    gap: 0.2rem 0.45rem;
+  }
+
+  .hero-meta-label,
+  .hero-meta-value,
+  .direction-button {
+    font-size: 0.67rem;
   }
 
   .arrival-summary {
@@ -661,8 +665,7 @@ body {
   }
 
   .section-note,
-  .section-head a,
-  .refresh-note {
+  .section-head a {
     font-size: 0.7rem;
   }
 
@@ -680,8 +683,7 @@ body {
   }
 
   .direction-button {
-    font-size: 0.72rem;
-    padding: 0.25rem 0.55rem;
+    padding: 0.22rem 0.48rem;
   }
 
   .journey-card,
