@@ -3,15 +3,13 @@
 ## 目的
 
 - GitHub Pages 上で軽量な web アプリを公開する。
-- 固定ルート 伊勢山（平塚市） -> 大野農協前（平塚市）の神奈中リアルタイム接近情報を表示する。
+- 固定ルートの神奈中リアルタイム接近情報を表示する。
 - 公開データを 5 分ごとに更新する。
 
 ## 固定ルート定義
 
-- 乗車停留所: 伊勢山（平塚市）
-- 乗車停留所 ID: `16240`
-- 降車停留所: 大野農協前（平塚市）
-- 降車停留所 ID: `16244`
+- 乗車停留所 ID は scraper 内の定数で管理する。
+- 降車停留所 ID は scraper 内の定数で管理する。
 
 ## 設計判断
 
@@ -45,8 +43,8 @@
 - `fetchedAt`: ISO 8601 形式の UTC timestamp
 - `message`: 取得結果を示すトップレベル文言
 - `hasLiveData`: boolean
-- `route.fromStop.id`: `16240`
-- `route.toStop.id`: `16244`
+- `route.fromStop.id`: configured from stop id
+- `route.toStop.id`: configured to stop id
 - `source.url`: upstream の結果 URL
 - `details`: 元ページから抽出した平坦化済みテキスト
 

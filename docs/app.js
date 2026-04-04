@@ -68,8 +68,12 @@ function normalizeText(value) {
   return String(value ?? "").replace(/\s+/g, " ").trim();
 }
 
+function displayText(value) {
+  return normalizeText(value);
+}
+
 function formatSourceUpdated(value) {
-  const text = normalizeText(value);
+  const text = displayText(value);
   return text || "--";
 }
 
@@ -81,7 +85,7 @@ function formatDelayMinutes(value) {
 }
 
 function formatTimeValue(value) {
-  const text = normalizeText(value);
+  const text = displayText(value);
   return text || "--:--";
 }
 
@@ -94,11 +98,11 @@ function buildPrimaryHeadline(journey, featured = false) {
     return featured ? `${journey.scheduledArrivalTime} 到着予定` : `${journey.scheduledArrivalTime} 着予定`;
   }
 
-  return normalizeText(journey?.destination ?? "接近情報を確認中");
+  return displayText(journey?.destination ?? "接近情報を確認中");
 }
 
 function buildStatusLine(journey) {
-  const headline = normalizeText(journey?.headline);
+  const headline = displayText(journey?.headline);
   const parts = [];
 
   if (headline.includes("運行中")) {
@@ -136,7 +140,7 @@ function renderDetails(items) {
 
   for (const entry of items) {
     const item = document.createElement("li");
-    item.textContent = entry;
+    item.textContent = displayText(entry);
     detailListEl.append(item);
   }
 }
@@ -154,7 +158,7 @@ function renderNoticeList(items) {
 
   for (const entry of notices) {
     const item = document.createElement("li");
-    item.textContent = entry;
+    item.textContent = displayText(entry);
     noticeListEl.append(item);
   }
 }
@@ -163,20 +167,16 @@ function buildJourneyCardMarkup(journey, featured = false) {
   const vehicleBadge = journey.vehicleMark && journey.accessibilityLabel
     ? `${journey.vehicleMark} ${journey.accessibilityLabel}`
     : journey.vehicleMark || "";
-  const summary = [journey.destination ? `${journey.destination} 行` : "", journey.via ? `${journey.via} 経由` : ""]
+  const summary = [journey.destination ? `${displayText(journey.destination)} 行` : "", journey.via ? `${displayText(journey.via)} 経由` : ""]
     .filter(Boolean)
     .join(" / ");
   const primaryHeadline = buildPrimaryHeadline(journey, featured);
   const statusLine = buildStatusLine(journey);
-  const secondaryLine = (journey.statusNotes ?? [])
-    .filter((entry) => !normalizeText(entry).includes("遅れ"))
-    .map((entry) => normalizeText(entry))
-    .join(" / ");
   const stops = Array.isArray(journey.stops) ? journey.stops : [];
   const stopMarkup = stops
     .map((stop, index) => {
       const className = index === stops.length - 1 ? "stop-chip current" : "stop-chip";
-      return `<span class="${className}">${escapeHtml(stop)}</span>`;
+      return `<span class="${className}">${escapeHtml(displayText(stop))}</span>`;
     })
     .join("");
 
@@ -190,7 +190,6 @@ function buildJourneyCardMarkup(journey, featured = false) {
       <${featured ? "h3" : "h4"} class="journey-headline">${escapeHtml(primaryHeadline)}</${featured ? "h3" : "h4"}>
       ${summary ? `<p class="journey-destination">${escapeHtml(summary)}</p>` : ""}
       ${statusLine ? `<p class="journey-subline">${escapeHtml(statusLine)}</p>` : ""}
-      ${secondaryLine ? `<p class="journey-note">${escapeHtml(secondaryLine)}</p>` : ""}
       <dl class="journey-meta">
         <div><dt>到着見込み</dt><dd>${escapeHtml(formatTimeValue(journey.expectedArrivalTime))}</dd></div>
         <div><dt>遅れ見込み</dt><dd>${escapeHtml(formatDelayMinutes(journey.delayMinutes))}</dd></div>
@@ -212,7 +211,7 @@ function renderJourneys(journeys) {
 
   journeyCountEl.textContent = `${items.length}件`;
   journeyCountInlineEl.textContent = items.length > 0 ? `${items.length}件を表示` : "便なし";
-  nextJourneyNoteEl.textContent = featured?.route ? `系統 ${featured.route} / ${featured.destination ?? "行先不明"}` : "--";
+  nextJourneyNoteEl.textContent = featured?.route ? `系統 ${displayText(featured.route)} / ${displayText(featured.destination ?? "行先不明")}` : "--";
   sourceUpdatedEl.textContent = formatSourceUpdated(featured?.updatedAtText);
   scheduledArrivalTimeEl.textContent = formatTimeValue(featured?.scheduledArrivalTime);
   delayMinutesEl.textContent = formatDelayMinutes(featured?.delayMinutes);
@@ -236,15 +235,15 @@ function renderPayload(payload) {
   const journeys = Array.isArray(payload.journeys) ? payload.journeys : [];
   const overview = Array.isArray(payload.overview) ? payload.overview : [];
 
-  fromStopEl.textContent = payload.route?.fromStop?.name ?? "伊勢山（平塚市）";
-  toStopEl.textContent = payload.route?.toStop?.name ?? "大野農協前（平塚市）";
+  fromStopEl.textContent = displayText(payload.route?.fromStop?.name ?? "出発停留所");
+  toStopEl.textContent = displayText(payload.route?.toStop?.name ?? "目的停留所");
   sourceLinkEl.href = payload.source?.url ?? "https://real.kanachu.jp/pc/top";
 
   statusMessageEl.textContent = journeys[0]?.expectedArrivalTime
     ? `${journeys[0].expectedArrivalTime} 着見込み`
-    : normalizeText(payload.message ?? "情報を取得できませんでした。");
+    : displayText(payload.message ?? "情報を取得できませんでした。");
   updatedAtEl.textContent = formatDateTime(payload.fetchedAt);
-  overviewTextEl.textContent = overview.join(" ");
+  overviewTextEl.textContent = displayText(overview.join(" "));
 
   if (payload.status === "error") {
     setTone("tone-error", "取得失敗");
@@ -281,8 +280,8 @@ async function refresh() {
       fetchedAt: null,
       hasLiveData: false,
       route: {
-        fromStop: { name: "伊勢山（平塚市）" },
-        toStop: { name: "大野農協前（平塚市）" },
+        fromStop: { name: "出発停留所" },
+        toStop: { name: "目的停留所" },
       },
       source: { url: "https://real.kanachu.jp/pc/top" },
       overview: [],

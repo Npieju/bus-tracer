@@ -17,6 +17,8 @@ FROM_STOP_ID = "16240"
 TO_STOP_ID = "16244"
 FROM_STOP_NAME = "伊勢山（平塚市）"
 TO_STOP_NAME = "大野農協前（平塚市）"
+PUBLIC_FROM_STOP_NAME = "出発停留所"
+PUBLIC_TO_STOP_NAME = "目的停留所"
 SITE_ERROR_TEXT = "以下のエラーが発生しました"
 JOURNEY_START_RE = re.compile(r"^早い順\s+(\d+)$")
 ACCESSIBILITY_LABELS = {
@@ -106,6 +108,14 @@ def compact_stop_name(name: str) -> str:
     return compact.strip()
 
 
+PUBLIC_STOP_LABELS = {
+    FROM_STOP_NAME: PUBLIC_FROM_STOP_NAME,
+    compact_stop_name(FROM_STOP_NAME): PUBLIC_FROM_STOP_NAME,
+    TO_STOP_NAME: PUBLIC_TO_STOP_NAME,
+    compact_stop_name(TO_STOP_NAME): PUBLIC_TO_STOP_NAME,
+}
+
+
 def html_to_lines(fragment: str) -> list[str]:
     cleaned = re.sub(r"<script.*?</script>", "", fragment, flags=re.IGNORECASE | re.DOTALL)
     cleaned = re.sub(r"<style.*?</style>", "", cleaned, flags=re.IGNORECASE | re.DOTALL)
@@ -140,6 +150,43 @@ def unique_preserving_order(items: list[str]) -> list[str]:
         seen.add(item)
         result.append(item)
     return result
+
+
+def redact_public_text(value: str | None) -> str | None:
+    if value is None:
+        return None
+
+    text = value
+    for raw_name, alias in PUBLIC_STOP_LABELS.items():
+        text = text.replace(raw_name, alias)
+    return text
+
+
+def sanitize_public_value(value: object) -> object:
+    if isinstance(value, str):
+        return redact_public_text(value)
+    if isinstance(value, list):
+        return [sanitize_public_value(item) for item in value]
+    if isinstance(value, dict):
+        return {key: sanitize_public_value(item) for key, item in value.items()}
+    return value
+
+
+def sanitize_public_payload(route: RouteConfig, payload: dict[str, object]) -> dict[str, object]:
+    public_payload = sanitize_public_value(payload)
+    if not isinstance(public_payload, dict):
+        raise RuntimeError("公開用 payload を構築できませんでした。")
+
+    public_payload["route"] = {
+        "fromStop": {"id": route.from_stop_id, "name": PUBLIC_FROM_STOP_NAME},
+        "toStop": {"id": route.to_stop_id, "name": PUBLIC_TO_STOP_NAME},
+    }
+
+    source = public_payload.get("source")
+    if isinstance(source, dict):
+        source["url"] = urllib.parse.urljoin(BASE_URL, "top")
+
+    return public_payload
 
 
 def extract_overview(details: list[str]) -> list[str]:
@@ -412,6 +459,7 @@ def main() -> int:
     except Exception as exc:
         payload = build_error_payload(ROUTE, exc)
 
+    payload = sanitize_public_payload(ROUTE, payload)
     write_payload(output_path, payload)
     return 0
 

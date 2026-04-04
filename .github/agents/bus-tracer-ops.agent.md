@@ -9,7 +9,7 @@ user-invocable: true
 役割は scheduled GitHub Pages deploy を健全に保ち、固定ルート要件を守り、変更を入れる前に運用リスクを表面化することです。
 
 ## 対象範囲
-- 伊勢山（平塚市）から大野農協前（平塚市）への固定ルートを維持する。
+- configured fixed route を維持する。
 - scheduled GitHub Actions の fetch-and-deploy フローを守る。
 - 運用メモ、リリースチェックリスト、TODO を最新に保つ。
 - parser 変更後も `docs/data/status.json` が有効な payload を出すことを確認する。
