@@ -22,8 +22,12 @@ const noticeListEl = document.querySelector("#notice-list");
 const fromStopEl = document.querySelector("#from-stop");
 const toStopEl = document.querySelector("#to-stop");
 const sourceLinkEl = document.querySelector("#source-link");
+const directionSwitchEl = document.querySelector("#direction-switch");
+const routeDirectionLabelEl = document.querySelector("#route-direction-label");
 
 let nextRefreshAt = Date.now() + REFRESH_INTERVAL_MS;
+let currentPayload = null;
+let activeDirectionKey = null;
 
 function formatDateTime(value) {
   if (!value) {
@@ -70,6 +74,79 @@ function normalizeText(value) {
 
 function displayText(value) {
   return normalizeText(value);
+}
+
+function normalizePayload(payload) {
+  if (payload?.directions && typeof payload.directions === "object") {
+    return payload;
+  }
+
+  return {
+    schemaVersion: 1,
+    fetchedAt: payload?.fetchedAt ?? null,
+    status: payload?.status ?? "error",
+    message: payload?.message ?? "情報を取得できませんでした。",
+    directionOrder: ["default"],
+    defaultDirection: "default",
+    directions: {
+      default: {
+        direction: {
+          key: "default",
+          label: "固定ルート",
+          shortLabel: "固定",
+        },
+        ...(payload ?? {}),
+      },
+    },
+  };
+}
+
+function getDirectionEntries(payload) {
+  const keys = Array.isArray(payload?.directionOrder) && payload.directionOrder.length
+    ? payload.directionOrder
+    : Object.keys(payload?.directions ?? {});
+
+  return keys
+    .map((key) => [key, payload?.directions?.[key]])
+    .filter(([, directionPayload]) => Boolean(directionPayload));
+}
+
+function getSelectedDirectionPayload(payload) {
+  const entries = getDirectionEntries(payload);
+  if (!entries.length) {
+    return [null, null];
+  }
+
+  const validKey = entries.some(([key]) => key === activeDirectionKey)
+    ? activeDirectionKey
+    : payload.defaultDirection;
+  const selectedKey = entries.some(([key]) => key === validKey) ? validKey : entries[0][0];
+  activeDirectionKey = selectedKey;
+  return [selectedKey, payload.directions[selectedKey]];
+}
+
+function renderDirectionSwitch(payload) {
+  directionSwitchEl.innerHTML = "";
+  const entries = getDirectionEntries(payload);
+
+  if (entries.length <= 1) {
+    directionSwitchEl.hidden = true;
+    return;
+  }
+
+  directionSwitchEl.hidden = false;
+
+  for (const [key, directionPayload] of entries) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = key === activeDirectionKey ? "direction-button active" : "direction-button";
+    button.textContent = directionPayload.direction?.label ?? key;
+    button.addEventListener("click", () => {
+      activeDirectionKey = key;
+      renderPayload(currentPayload);
+    });
+    directionSwitchEl.append(button);
+  }
 }
 
 function formatSourceUpdated(value) {
@@ -232,30 +309,41 @@ function renderJourneys(journeys) {
 }
 
 function renderPayload(payload) {
-  const journeys = Array.isArray(payload.journeys) ? payload.journeys : [];
-  const overview = Array.isArray(payload.overview) ? payload.overview : [];
+  currentPayload = normalizePayload(payload);
+  const [, selected] = getSelectedDirectionPayload(currentPayload);
+  renderDirectionSwitch(currentPayload);
 
-  fromStopEl.textContent = displayText(payload.route?.fromStop?.name ?? "出発停留所");
-  toStopEl.textContent = displayText(payload.route?.toStop?.name ?? "目的停留所");
-  sourceLinkEl.href = payload.source?.url ?? "https://real.kanachu.jp/pc/top";
+  if (!selected) {
+    statusMessageEl.textContent = "表示できる方向がありません。";
+    setTone("tone-error", "取得失敗");
+    return;
+  }
+
+  const journeys = Array.isArray(selected.journeys) ? selected.journeys : [];
+  const overview = Array.isArray(selected.overview) ? selected.overview : [];
+
+  routeDirectionLabelEl.textContent = displayText(selected.direction?.shortLabel ?? selected.direction?.label ?? "固定ルート");
+  fromStopEl.textContent = displayText(selected.route?.fromStop?.name ?? "出発停留所");
+  toStopEl.textContent = displayText(selected.route?.toStop?.name ?? "目的停留所");
+  sourceLinkEl.href = selected.source?.url ?? "https://real.kanachu.jp/pc/top";
 
   statusMessageEl.textContent = journeys[0]?.expectedArrivalTime
     ? `${journeys[0].expectedArrivalTime} 着見込み`
-    : displayText(payload.message ?? "情報を取得できませんでした。");
-  updatedAtEl.textContent = formatDateTime(payload.fetchedAt);
+    : displayText(selected.message ?? currentPayload.message ?? "情報を取得できませんでした。");
+  updatedAtEl.textContent = formatDateTime(selected.fetchedAt ?? currentPayload.fetchedAt);
   overviewTextEl.textContent = displayText(overview.join(" "));
 
-  if (payload.status === "error") {
+  if (selected.status === "error") {
     setTone("tone-error", "取得失敗");
-  } else if (payload.hasLiveData) {
+  } else if (selected.hasLiveData) {
     setTone("tone-ok", "運行情報あり");
   } else {
     setTone("tone-warn", "接近情報なし");
   }
 
   renderJourneys(journeys);
-  renderNoticeList(payload.notices);
-  renderDetails(payload.details);
+  renderNoticeList(selected.notices);
+  renderDetails(selected.details);
 }
 
 async function loadData() {
@@ -278,16 +366,42 @@ async function refresh() {
       status: "error",
       message: "status.json を読めませんでした。",
       fetchedAt: null,
-      hasLiveData: false,
-      route: {
-        fromStop: { name: "出発停留所" },
-        toStop: { name: "目的停留所" },
+      directionOrder: ["forward", "reverse"],
+      defaultDirection: activeDirectionKey ?? "forward",
+      directions: {
+        forward: {
+          status: "error",
+          message: "status.json を読めませんでした。",
+          fetchedAt: null,
+          hasLiveData: false,
+          direction: { key: "forward", label: "出発→目的", shortLabel: "順方向" },
+          route: {
+            fromStop: { name: "出発停留所" },
+            toStop: { name: "目的停留所" },
+          },
+          source: { url: "https://real.kanachu.jp/pc/top" },
+          overview: [],
+          notices: [],
+          journeys: [],
+          details: [error instanceof Error ? error.message : String(error)],
+        },
+        reverse: {
+          status: "error",
+          message: "status.json を読めませんでした。",
+          fetchedAt: null,
+          hasLiveData: false,
+          direction: { key: "reverse", label: "目的→出発", shortLabel: "逆方向" },
+          route: {
+            fromStop: { name: "目的停留所" },
+            toStop: { name: "出発停留所" },
+          },
+          source: { url: "https://real.kanachu.jp/pc/top" },
+          overview: [],
+          notices: [],
+          journeys: [],
+          details: [error instanceof Error ? error.message : String(error)],
+        },
       },
-      source: { url: "https://real.kanachu.jp/pc/top" },
-      overview: [],
-      notices: [],
-      journeys: [],
-      details: [error instanceof Error ? error.message : String(error)],
     });
     nextRefreshAt = Date.now() + REFRESH_INTERVAL_MS;
   }

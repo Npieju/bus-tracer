@@ -3,7 +3,7 @@
 ## 目的
 
 - GitHub Pages 上で軽量な web アプリを公開する。
-- 固定ルートの神奈中リアルタイム接近情報を表示する。
+- 固定ルートの神奈中リアルタイム接近情報を順方向・逆方向の両方で表示する。
 - 公開データを 5 分ごとに更新する。
 
 ## 固定ルート定義
@@ -16,8 +16,9 @@
 - サイトは静的構成で、`docs/` を GitHub Pages から配信する。
 - upstream サイトにはこの用途で使える permissive な CORS 経路がないため、live data をブラウザから直接取得しない。
 - データ取得は GitHub Actions 内で 5 分ごとに server-side 実行する。
-- スクレイパーは正規化済み JSON スナップショットを `docs/data/status.json` に出力する。
+- スクレイパーは双方向の正規化済み JSON スナップショットを `docs/data/status.json` に出力する。
 - フロントエンドは `status.json` を読み、ブラウザ内でも 5 分ごとに再取得する。
+- 通常の機能追加・調整は、別途確認なしで commit / push して Pages 反映まで進める前提で運用する。
 
 ## 主要ファイル
 
@@ -39,14 +40,11 @@
 
 `docs/data/status.json` には常に次のキーが入る。
 
-- `status`: `ok` または `error`
+- `status`: `ok`、`partial`、`error` のいずれか
 - `fetchedAt`: ISO 8601 形式の UTC timestamp
 - `message`: 取得結果を示すトップレベル文言
-- `hasLiveData`: boolean
-- `route.fromStop.id`: configured from stop id
-- `route.toStop.id`: configured to stop id
-- `source.url`: upstream の結果 URL
-- `details`: 元ページから抽出した平坦化済みテキスト
+- `directionOrder`: 表示順を示す direction key 配列
+- `directions.<key>`: 方向ごとの `status`、`route`、`journeys`、`details` などの payload
 
 ## 運用リスク
 
@@ -55,6 +53,7 @@
 - scheduled workflow は default branch でのみ動く。
 - GitHub Pages は初回 deploy 成功まで未公開のままになりうる。
 - 運行時間外は、取得自体が成功していても `該当する情報は現在ありません。` になることがある。
+- commit / push を止めるのは、破壊的変更、要件の曖昧さ、権限不足などの例外時に限る。
 
 ## 確認コマンド
 

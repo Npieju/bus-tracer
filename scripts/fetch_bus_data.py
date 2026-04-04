@@ -17,8 +17,8 @@ FROM_STOP_ID = "16240"
 TO_STOP_ID = "16244"
 FROM_STOP_NAME = "伊勢山（平塚市）"
 TO_STOP_NAME = "大野農協前（平塚市）"
-PUBLIC_FROM_STOP_NAME = "出発停留所"
-PUBLIC_TO_STOP_NAME = "目的停留所"
+PUBLIC_STOP_A_NAME = "出発停留所"
+PUBLIC_STOP_B_NAME = "目的停留所"
 SITE_ERROR_TEXT = "以下のエラーが発生しました"
 JOURNEY_START_RE = re.compile(r"^早い順\s+(\d+)$")
 ACCESSIBILITY_LABELS = {
@@ -46,10 +46,15 @@ IGNORED_LINES = {
 
 @dataclass(frozen=True)
 class RouteConfig:
+    key: str
+    label: str
+    short_label: str
     from_stop_id: str
     to_stop_id: str
     from_stop_name: str
     to_stop_name: str
+    public_from_stop_name: str
+    public_to_stop_name: str
 
     @property
     def source_url(self) -> str:
@@ -65,12 +70,31 @@ class RouteConfig:
         return urllib.parse.urljoin(BASE_URL, f"displayapproachinfo?{query}")
 
 
-ROUTE = RouteConfig(
+FORWARD_ROUTE = RouteConfig(
+    key="forward",
+    label="出発→目的",
+    short_label="順方向",
     from_stop_id=FROM_STOP_ID,
     to_stop_id=TO_STOP_ID,
     from_stop_name=FROM_STOP_NAME,
     to_stop_name=TO_STOP_NAME,
+    public_from_stop_name=PUBLIC_STOP_A_NAME,
+    public_to_stop_name=PUBLIC_STOP_B_NAME,
 )
+
+REVERSE_ROUTE = RouteConfig(
+    key="reverse",
+    label="目的→出発",
+    short_label="逆方向",
+    from_stop_id=TO_STOP_ID,
+    to_stop_id=FROM_STOP_ID,
+    from_stop_name=TO_STOP_NAME,
+    to_stop_name=FROM_STOP_NAME,
+    public_from_stop_name=PUBLIC_STOP_B_NAME,
+    public_to_stop_name=PUBLIC_STOP_A_NAME,
+)
+
+ROUTES = (FORWARD_ROUTE, REVERSE_ROUTE)
 
 
 def build_opener() -> urllib.request.OpenerDirector:
@@ -108,12 +132,13 @@ def compact_stop_name(name: str) -> str:
     return compact.strip()
 
 
-PUBLIC_STOP_LABELS = {
-    FROM_STOP_NAME: PUBLIC_FROM_STOP_NAME,
-    compact_stop_name(FROM_STOP_NAME): PUBLIC_FROM_STOP_NAME,
-    TO_STOP_NAME: PUBLIC_TO_STOP_NAME,
-    compact_stop_name(TO_STOP_NAME): PUBLIC_TO_STOP_NAME,
-}
+def build_public_stop_labels(route: RouteConfig) -> dict[str, str]:
+    return {
+        route.from_stop_name: route.public_from_stop_name,
+        compact_stop_name(route.from_stop_name): route.public_from_stop_name,
+        route.to_stop_name: route.public_to_stop_name,
+        compact_stop_name(route.to_stop_name): route.public_to_stop_name,
+    }
 
 
 def html_to_lines(fragment: str) -> list[str]:
@@ -152,34 +177,39 @@ def unique_preserving_order(items: list[str]) -> list[str]:
     return result
 
 
-def redact_public_text(value: str | None) -> str | None:
+def redact_public_text(route: RouteConfig, value: str | None) -> str | None:
     if value is None:
         return None
 
     text = value
-    for raw_name, alias in PUBLIC_STOP_LABELS.items():
+    for raw_name, alias in build_public_stop_labels(route).items():
         text = text.replace(raw_name, alias)
     return text
 
 
-def sanitize_public_value(value: object) -> object:
+def sanitize_public_value(route: RouteConfig, value: object) -> object:
     if isinstance(value, str):
-        return redact_public_text(value)
+        return redact_public_text(route, value)
     if isinstance(value, list):
-        return [sanitize_public_value(item) for item in value]
+        return [sanitize_public_value(route, item) for item in value]
     if isinstance(value, dict):
-        return {key: sanitize_public_value(item) for key, item in value.items()}
+        return {key: sanitize_public_value(route, item) for key, item in value.items()}
     return value
 
 
 def sanitize_public_payload(route: RouteConfig, payload: dict[str, object]) -> dict[str, object]:
-    public_payload = sanitize_public_value(payload)
+    public_payload = sanitize_public_value(route, payload)
     if not isinstance(public_payload, dict):
         raise RuntimeError("公開用 payload を構築できませんでした。")
 
+    public_payload["direction"] = {
+        "key": route.key,
+        "label": route.label,
+        "shortLabel": route.short_label,
+    }
     public_payload["route"] = {
-        "fromStop": {"id": route.from_stop_id, "name": PUBLIC_FROM_STOP_NAME},
-        "toStop": {"id": route.to_stop_id, "name": PUBLIC_TO_STOP_NAME},
+        "fromStop": {"id": route.from_stop_id, "name": route.public_from_stop_name},
+        "toStop": {"id": route.to_stop_id, "name": route.public_to_stop_name},
     }
 
     source = public_payload.get("source")
@@ -437,6 +467,43 @@ def build_error_payload(route: RouteConfig, exc: Exception) -> dict[str, object]
     }
 
 
+def build_snapshot(routes: tuple[RouteConfig, ...]) -> dict[str, object]:
+    directions: dict[str, dict[str, object]] = {}
+    route_statuses: list[str] = []
+
+    for route in routes:
+        try:
+            page_html = fetch_page(route)
+            payload = parse_payload(route, page_html)
+            validate_payload(route, payload)
+        except Exception as exc:
+            payload = build_error_payload(route, exc)
+
+        public_payload = sanitize_public_payload(route, payload)
+        directions[route.key] = public_payload
+        route_statuses.append(str(public_payload.get("status", "error")))
+
+    if all(status == "error" for status in route_statuses):
+        overall_status = "error"
+        message = "双方向のデータ取得に失敗しました。"
+    elif any(status == "error" for status in route_statuses):
+        overall_status = "partial"
+        message = "一方向のみ取得できています。"
+    else:
+        overall_status = "ok"
+        message = "双方向のデータを取得しました。"
+
+    return {
+        "schemaVersion": 2,
+        "fetchedAt": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+        "status": overall_status,
+        "message": message,
+        "directionOrder": [route.key for route in routes],
+        "defaultDirection": routes[0].key,
+        "directions": directions,
+    }
+
+
 def write_payload(output_path: Path, payload: dict[str, object]) -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -452,14 +519,7 @@ def main() -> int:
     args = parser.parse_args()
 
     output_path = Path(args.output)
-    try:
-        page_html = fetch_page(ROUTE)
-        payload = parse_payload(ROUTE, page_html)
-        validate_payload(ROUTE, payload)
-    except Exception as exc:
-        payload = build_error_payload(ROUTE, exc)
-
-    payload = sanitize_public_payload(ROUTE, payload)
+    payload = build_snapshot(ROUTES)
     write_payload(output_path, payload)
     return 0
 

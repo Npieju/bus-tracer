@@ -44,3 +44,4 @@
 - 定期更新に commit/push hook は使わない。
 - 定期更新の正本は scheduled GitHub Actions とする。
 - ルートは当面固定とする。
+- 通常の実装作業は、追加確認なしで commit / push して公開反映まで進める。

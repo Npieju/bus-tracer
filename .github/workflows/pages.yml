@@ -47,10 +47,17 @@ jobs:
           from pathlib import Path
 
           data = json.loads(Path("docs/data/status.json").read_text(encoding="utf-8"))
-          assert data["route"]["fromStop"]["id"] == "16240"
-          assert data["route"]["toStop"]["id"] == "16244"
-          assert data["status"] in {"ok", "error"}
-          assert isinstance(data["details"], list)
+          assert data["schemaVersion"] == 2
+          assert data["status"] in {"ok", "partial", "error"}
+          assert data["directionOrder"] == ["forward", "reverse"]
+          forward = data["directions"]["forward"]
+          reverse = data["directions"]["reverse"]
+          assert forward["route"]["fromStop"]["id"] == "16240"
+          assert forward["route"]["toStop"]["id"] == "16244"
+          assert reverse["route"]["fromStop"]["id"] == "16244"
+          assert reverse["route"]["toStop"]["id"] == "16240"
+          assert isinstance(forward["details"], list)
+          assert isinstance(reverse["details"], list)
           print(json.dumps({
               "status": data["status"],
               "message": data["message"],
@@ -70,7 +77,10 @@ jobs:
           print(f"- status: {data['status']}")
           print(f"- message: {data['message']}")
           print(f"- fetchedAt: {data['fetchedAt']}")
-          print(f"- source: {data['source']['url']}")
+          for key in data["directionOrder"]:
+              direction = data["directions"][key]
+              label = direction["direction"]["label"]
+              print(f"- {label}: {direction['status']} / {direction['message']}")
           PY
 
       - name: Configure Pages

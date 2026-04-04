@@ -52,18 +52,24 @@
             </div>
           </div>
 
+          <div class="direction-switch" id="direction-switch" aria-label="表示方向の切替"></div>
           <p class="refresh-note">ブラウザ再取得まで <span id="countdown">--:--</span></p>
         </section>
 
         <section class="route-strip panel">
-          <div>
-            <div class="route-label">乗車</div>
-            <div class="route-stop" id="from-stop">出発停留所</div>
+          <div class="route-strip-head">
+            <div class="route-direction-label" id="route-direction-label">順方向</div>
           </div>
-          <div class="route-arrow">→</div>
-          <div>
-            <div class="route-label">降車</div>
-            <div class="route-stop" id="to-stop">目的停留所</div>
+          <div class="route-strip-body">
+            <div>
+              <div class="route-label">乗車</div>
+              <div class="route-stop" id="from-stop">出発停留所</div>
+            </div>
+            <div class="route-arrow">→</div>
+            <div>
+              <div class="route-label">降車</div>
+              <div class="route-stop" id="to-stop">目的停留所</div>
+            </div>
           </div>
         </section>
 

@@ -1,6 +1,6 @@
 # bus-tracer
 
-特定の固定ルートに対する神奈中バス接近情報を追跡し、5分ごとに公開データを更新する GitHub Pages アプリです。
+特定の固定ルートについて、順方向と逆方向の両方の神奈中バス接近情報を追跡し、5分ごとに公開データを更新する GitHub Pages アプリです。
 
 ## 同梱パッケージ
 
@@ -47,13 +47,13 @@ dev container には `gh` が入っています。
 
 ## 構成
 
-- `scripts/fetch_bus_data.py`: 神奈中の接近情報ページを取得して解析し、`docs/data/status.json` を出力します。
+- `scripts/fetch_bus_data.py`: 神奈中の接近情報ページを順方向・逆方向の両方で取得して解析し、`docs/data/status.json` を出力します。
 - `docs/`: GitHub Pages で公開する静的サイトです。
 - `.github/workflows/pages.yml`: 5分ごとにスクレイパーを実行し、更新済みサイトをデプロイします。
 
 ## ローカル確認
 
-現在のデータスナップショットを生成します。
+現在の双方向データスナップショットを生成します。
 
 ```bash
 python3 scripts/fetch_bus_data.py --output docs/data/status.json
@@ -73,6 +73,11 @@ python3 -m http.server 8000 --directory docs
 2. GitHub 側で Pages のソースを `GitHub Actions` に設定します。
 3. workflow は push 時、手動実行時、5分間隔の cron でデプロイされます。
 
+## 運用メモ
+
+- 実装依頼に対する通常の更新では、別途確認を挟まずに commit / push して Pages 反映まで進めてよい運用とする。
+- 破壊的変更、要件不明、外部権限不足などの例外時のみ停止して確認する。
+
 ## 本番前チェックリスト
 
 1. 少なくとも一度はローカルの `main` を `origin/main` に push します。最初の push までは remote 側に default branch がなく、Pages は開始できません。
@@ -91,7 +96,7 @@ python3 -m http.server 8000 --directory docs
 補足:
 
 - GitHub Actions の cron は 5 分間隔を指定できますが、実際の実行時刻には多少のズレがあります。
-- アプリ自体もブラウザ側で 5 分ごとに `status.json` を再取得するため、開いたままのタブでも新しいデプロイを追従できます。
+- アプリ自体もブラウザ側で 5 分ごとに `status.json` を再取得するため、開いたままのタブでも双方向の新しいデプロイを追従できます。
 
 ## GitHub リポジトリ
 
