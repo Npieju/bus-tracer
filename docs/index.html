@@ -30,6 +30,20 @@
               <div class="metric-label">現在の状態</div>
               <div class="metric-value" id="status-message">読み込み中...</div>
               <div class="pill" id="status-pill">更新中</div>
+              <div class="quick-peek-grid hero-quick-peek-grid" id="quick-peek-grid">
+                <article class="quick-peek-card hero-quick-peek-card">
+                  <div class="quick-peek-label">次の便</div>
+                  <div class="quick-peek-time" id="quick-peek-next-time">--:--</div>
+                  <div class="quick-peek-route" id="quick-peek-next-route">--</div>
+                  <div class="quick-peek-meta" id="quick-peek-next-meta">--</div>
+                </article>
+                <article class="quick-peek-card hero-quick-peek-card subdued">
+                  <div class="quick-peek-label">次の次の便</div>
+                  <div class="quick-peek-time" id="quick-peek-later-time">--:--</div>
+                  <div class="quick-peek-route" id="quick-peek-later-route">--</div>
+                  <div class="quick-peek-meta" id="quick-peek-later-meta">--</div>
+                </article>
+              </div>
             </div>
           </div>
 
@@ -78,20 +92,6 @@
               <div class="arrival-label">実際の到着見込み</div>
               <div class="arrival-time" id="expected-arrival-time">--:--</div>
             </div>
-          </div>
-          <div class="quick-peek-grid" id="quick-peek-grid">
-            <article class="quick-peek-card">
-              <div class="quick-peek-label">次の便</div>
-              <div class="quick-peek-time" id="quick-peek-next-time">--:--</div>
-              <div class="quick-peek-route" id="quick-peek-next-route">--</div>
-              <div class="quick-peek-meta" id="quick-peek-next-meta">--</div>
-            </article>
-            <article class="quick-peek-card subdued">
-              <div class="quick-peek-label">次の次の便</div>
-              <div class="quick-peek-time" id="quick-peek-later-time">--:--</div>
-              <div class="quick-peek-route" id="quick-peek-later-route">--</div>
-              <div class="quick-peek-meta" id="quick-peek-later-meta">--</div>
-            </article>
           </div>
           <div id="next-journey">データを読んでいます...</div>
         </section>

@@ -124,6 +124,14 @@ body {
   padding: 0.7rem 0.8rem;
 }
 
+.hero-quick-peek-grid {
+  margin-top: 0.5rem;
+}
+
+.hero-quick-peek-card {
+  background: rgba(255, 255, 255, 0.68);
+}
+
 .metric-card.emphasis {
   background: linear-gradient(135deg, rgba(191, 90, 54, 0.15), rgba(255, 250, 241, 0.94));
 }
@@ -383,6 +391,10 @@ body {
   color: var(--muted);
   font-size: 0.74rem;
   line-height: 1.3;
+}
+
+.hero-status-card .quick-peek-route {
+  color: var(--text);
 }
 
 .next-journey,
