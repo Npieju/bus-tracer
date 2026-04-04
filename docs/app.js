@@ -12,6 +12,12 @@ const overviewTextEl = document.querySelector("#overview-text");
 const scheduledArrivalTimeEl = document.querySelector("#scheduled-arrival-time");
 const delayMinutesEl = document.querySelector("#delay-minutes");
 const expectedArrivalTimeEl = document.querySelector("#expected-arrival-time");
+const quickPeekNextTimeEl = document.querySelector("#quick-peek-next-time");
+const quickPeekNextRouteEl = document.querySelector("#quick-peek-next-route");
+const quickPeekNextMetaEl = document.querySelector("#quick-peek-next-meta");
+const quickPeekLaterTimeEl = document.querySelector("#quick-peek-later-time");
+const quickPeekLaterRouteEl = document.querySelector("#quick-peek-later-route");
+const quickPeekLaterMetaEl = document.querySelector("#quick-peek-later-meta");
 const nextJourneySectionEl = document.querySelector("#next-journey-section");
 const nextJourneyNoteEl = document.querySelector("#next-journey-note");
 const nextJourneyEl = document.querySelector("#next-journey");
@@ -166,6 +172,37 @@ function formatTimeValue(value) {
   return text || "--:--";
 }
 
+function buildQuickPeekMeta(journey) {
+  if (!journey) {
+    return "便なし";
+  }
+
+  const parts = [];
+  if (journey.destination) {
+    parts.push(`${displayText(journey.destination)} 行`);
+  }
+  if (typeof journey.delayMinutes === "number") {
+    parts.push(formatDelayMinutes(journey.delayMinutes));
+  } else if (journey.departureScheduledTime) {
+    parts.push(`${journey.departureScheduledTime} 発予定`);
+  }
+
+  return parts.join(" / ") || "--";
+}
+
+function renderQuickPeeks(items) {
+  const nextJourney = items[0] ?? null;
+  const laterJourney = items[1] ?? null;
+
+  quickPeekNextTimeEl.textContent = formatTimeValue(nextJourney?.expectedArrivalTime ?? nextJourney?.scheduledArrivalTime);
+  quickPeekNextRouteEl.textContent = nextJourney?.route ? `系統 ${displayText(nextJourney.route)}` : "--";
+  quickPeekNextMetaEl.textContent = buildQuickPeekMeta(nextJourney);
+
+  quickPeekLaterTimeEl.textContent = formatTimeValue(laterJourney?.expectedArrivalTime ?? laterJourney?.scheduledArrivalTime);
+  quickPeekLaterRouteEl.textContent = laterJourney?.route ? `系統 ${displayText(laterJourney.route)}` : "--";
+  quickPeekLaterMetaEl.textContent = buildQuickPeekMeta(laterJourney);
+}
+
 function buildPrimaryHeadline(journey, featured = false) {
   if (journey?.expectedArrivalTime) {
     return featured ? `${journey.expectedArrivalTime} 着見込み` : `${journey.expectedArrivalTime} 到着見込み`;
@@ -286,6 +323,7 @@ function renderJourneys(journeys) {
   const featured = items[0];
   const remaining = items.slice(1);
 
+  renderQuickPeeks(items);
   journeyCountEl.textContent = `${items.length}件`;
   journeyCountInlineEl.textContent = items.length > 0 ? `${items.length}件を表示` : "便なし";
   nextJourneyNoteEl.textContent = featured?.route ? `系統 ${displayText(featured.route)} / ${displayText(featured.destination ?? "行先不明")}` : "--";
