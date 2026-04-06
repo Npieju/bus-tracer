@@ -77,7 +77,7 @@ jobs:
           data = json.loads(Path("docs/data/status.json").read_text(encoding="utf-8"))
           print("## Bus status snapshot")
           print()
-            print(f"- event: ${{ github.event_name }}")
+          print("- event: ${{ github.event_name }}")
           print(f"- status: {data['status']}")
           print(f"- message: {data['message']}")
           print(f"- fetchedAt: {data['fetchedAt']}")
