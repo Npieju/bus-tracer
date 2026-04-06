@@ -19,6 +19,7 @@
 - スクレイパーは双方向の正規化済み JSON スナップショットを `docs/data/status.json` に出力する。
 - フロントエンドは `status.json` を読み、ブラウザ内でも 5 分ごとに再取得する。
 - 通常の機能追加・調整は、別途確認なしで commit / push して Pages 反映まで進める前提で運用する。
+- GitHub Actions `schedule` は発火間隔が不安定なので、鮮度要件を満たす主系トリガーとしては使わず、external scheduler の dispatch を主系とする。
 
 ## 主要ファイル
 
@@ -50,6 +51,7 @@
 
 - upstream の HTML は予告なく変わり、解析が壊れる可能性がある。
 - GitHub Actions cron は厳密なリアルタイム実行ではなく、実行時刻にズレが出る。
+- 実測では GitHub Actions cron の発火間隔が 20 分超から数時間空くことがあり、snapshot stale の主要因になっている。
 - scheduled workflow は default branch でのみ動く。
 - GitHub Pages は初回 deploy 成功まで未公開のままになりうる。
 - 運行時間外は、取得自体が成功していても `該当する情報は現在ありません。` になることがある。

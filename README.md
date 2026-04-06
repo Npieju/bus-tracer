@@ -71,12 +71,31 @@ python3 -m http.server 8000 --directory docs
 
 1. このリポジトリを GitHub に push します。
 2. GitHub 側で Pages のソースを `GitHub Actions` に設定します。
-3. workflow は push 時、手動実行時、5分間隔の cron でデプロイされます。
+3. workflow は push 時、手動実行時、external dispatch、5分間隔の cron でデプロイされます。
+
+## 更新トリガー方針
+
+- GitHub Actions の `schedule` は 5 分間隔で安定しないため、主系の更新トリガーとしては使わない。
+- 主系は外部 scheduler からの `repository_dispatch` とし、GitHub 側の `schedule` は backup 扱いにする。
+- stale snapshot を避けたい場合は、5 分ごとに外部 scheduler から次の endpoint を叩く。
+
+```bash
+curl -L -X POST \
+	-H "Accept: application/vnd.github+json" \
+	-H "Authorization: Bearer ${GITHUB_TOKEN}" \
+	https://api.github.com/repos/Npieju/bus-tracer/dispatches \
+	-d '{"event_type":"external-refresh"}'
+```
+
+- public repository だけを触る classic PAT なら `public_repo`、private repository を触るなら `repo` scope が必要。
+- cron-job.org、EasyCron、GitHub App Script、Cloudflare Workers Cron Trigger など、任意の外部 scheduler を使ってよい。
+- 外部 scheduler ではタイムアウトを 30 秒以上にし、失敗時は少なくとも 1 回再試行させる。
 
 ## 運用メモ
 
 - 実装依頼に対する通常の更新では、別途確認を挟まずに commit / push して Pages 反映まで進めてよい運用とする。
 - 破壊的変更、要件不明、外部権限不足などの例外時のみ停止して確認する。
+- 鮮度が重要な更新では GitHub cron を信用せず、external scheduler の dispatch を主系として扱う。
 
 ## 本番前チェックリスト
 
@@ -91,11 +110,13 @@ python3 -m http.server 8000 --directory docs
 
 - 初回デプロイ成功前に `gh api repos/Npieju/bus-tracer/pages` が `404` を返すのは想定内です。
 - scheduled workflow は default branch 上でのみ動き、非アクティブなリポジトリでは自動停止されることがあります。
+- GitHub Actions の cron は設定どおりの 5 分間隔で走らないことがあり、20 分超から数時間の空白が発生することがあります。
 - upstream の HTML レイアウトが変わった場合でも、workflow summary には直近の取得結果が残り、`status.json` は壊れたデータを黙って公開せず error payload にフォールバックします。
 
 補足:
 
 - GitHub Actions の cron は 5 分間隔を指定できますが、実際の実行時刻には多少のズレがあります。
+- この repo では実測上、cron の空白が 1 時間超になることがあるため、5 分鮮度を求めるなら external scheduler が必須です。
 - アプリ自体もブラウザ側で 5 分ごとに `status.json` を再取得するため、開いたままのタブでも双方向の新しいデプロイを追従できます。
 
 ## GitHub リポジトリ

@@ -11,6 +11,7 @@ user-invocable: true
 ## 対象範囲
 - configured fixed route を維持する。
 - scheduled GitHub Actions の fetch-and-deploy フローを守る。
+- external scheduler dispatch を主系、scheduled GitHub Actions を backup として扱う。
 - 運用メモ、リリースチェックリスト、TODO を最新に保つ。
 - parser 変更後も `docs/data/status.json` が有効な payload を出すことを確認する。
 
@@ -21,6 +22,7 @@ user-invocable: true
 - 大きなリファクタよりも、小さくレビューしやすい変更を優先する。
 - 通常の実装依頼では、別途確認を求めず commit / push / 公開反映まで進める。
 - 破壊的変更、要件未確定、権限不足がある場合のみ停止して確認する。
+- 5 分鮮度を要求する運用では、GitHub cron だけに依存しない。
 
 ## 運用チェックリスト
 1. スクレイパーが対象ルートを解決し、`docs/data/status.json` を生成できることを確認する。
