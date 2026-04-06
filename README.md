@@ -71,13 +71,13 @@ python3 -m http.server 8000 --directory docs
 
 1. このリポジトリを GitHub に push します。
 2. GitHub 側で Pages のソースを `GitHub Actions` に設定します。
-3. workflow は push 時、手動実行時、external dispatch、30分間隔の backup cron でデプロイされます。
+3. workflow は push 時、手動実行時、external dispatch、5分間隔の backup cron でデプロイされます。
 
 ## 更新トリガー方針
 
 - GitHub Actions の `schedule` は 5 分間隔で安定しないため、主系の更新トリガーとしては使わない。
 - 主系は外部 scheduler からの `repository_dispatch` とし、GitHub 側の `schedule` は backup 扱いにする。
-- backup の `schedule` は 30 分間隔に落とし、さらに workflow 側で公開中 `status.json` の `fetchedAt` と比較して、より古い snapshot は deploy しない。
+- backup の `schedule` は 5 分間隔のまま残し、さらに workflow 側で公開中 `status.json` の `fetchedAt` と比較して、より古い snapshot は deploy しない。
 - 推奨サービスは `cron-job.org` とする。無料で 1 分間隔まで設定でき、HTTP POST、任意ヘッダ、実行履歴に対応しているため、この用途に十分。
 - stale snapshot を避けたい場合は、5 分ごとに外部 scheduler から次の endpoint を叩く。
 
@@ -170,7 +170,7 @@ Content-Type: application/json
 
 補足:
 
-- GitHub Actions の cron は 30 分間隔の backup として残しており、実際の実行時刻にはズレがあります。
+- GitHub Actions の cron は 5 分間隔の backup として残しており、実際の実行時刻にはズレがあります。
 - この repo では実測上、cron の空白が 1 時間超になることがあるため、鮮度要件は external scheduler を前提にし、backup cron は無更新時の保険として扱います。
 - アプリ自体もブラウザ側で 5 分ごとに `status.json` を再取得するため、開いたままのタブでも双方向の新しいデプロイを追従できます。
 

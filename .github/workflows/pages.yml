@@ -6,7 +6,7 @@ on:
     types:
       - external-refresh
   schedule:
-    - cron: "*/30 * * * *"
+    - cron: "*/5 * * * *"
   push:
     branches:
       - main
