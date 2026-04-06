@@ -20,6 +20,7 @@
 - フロントエンドは `status.json` を読み、ブラウザ内でも 5 分ごとに再取得する。
 - 通常の機能追加・調整は、別途確認なしで commit / push して Pages 反映まで進める前提で運用する。
 - GitHub Actions `schedule` は発火間隔が不安定なので、鮮度要件を満たす主系トリガーとしては使わず、external scheduler の dispatch を主系とする。
+- 現時点の推奨 external scheduler は `cron-job.org`。
 
 ## 主要ファイル
 

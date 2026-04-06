@@ -77,6 +77,7 @@ python3 -m http.server 8000 --directory docs
 
 - GitHub Actions の `schedule` は 5 分間隔で安定しないため、主系の更新トリガーとしては使わない。
 - 主系は外部 scheduler からの `repository_dispatch` とし、GitHub 側の `schedule` は backup 扱いにする。
+- 推奨サービスは `cron-job.org` とする。無料で 1 分間隔まで設定でき、HTTP POST、任意ヘッダ、実行履歴に対応しているため、この用途に十分。
 - stale snapshot を避けたい場合は、5 分ごとに外部 scheduler から次の endpoint を叩く。
 
 ```bash
@@ -90,6 +91,36 @@ curl -L -X POST \
 - public repository だけを触る classic PAT なら `public_repo`、private repository を触るなら `repo` scope が必要。
 - cron-job.org、EasyCron、GitHub App Script、Cloudflare Workers Cron Trigger など、任意の外部 scheduler を使ってよい。
 - 外部 scheduler ではタイムアウトを 30 秒以上にし、失敗時は少なくとも 1 回再試行させる。
+
+## cron-job.org 設定例
+
+1. `cron-job.org` に登録する。
+2. `Create cronjob` から新規 job を作る。
+3. URL は `https://api.github.com/repos/Npieju/bus-tracer/dispatches` にする。
+4. Request method は `POST` にする。
+5. 実行間隔は 5 分にする。
+6. Request headers に次を入れる。
+
+```text
+Accept: application/vnd.github+json
+Authorization: Bearer <GITHUB_TOKEN>
+Content-Type: application/json
+```
+
+7. Request body に次を入れる。
+
+```json
+{"event_type":"external-refresh"}
+```
+
+8. 作成後に `Test run` で 204 が返ることを確認する。
+9. GitHub Actions 側で `repository_dispatch` を受けた run が起動することを確認する。
+
+補足:
+
+- `GITHUB_TOKEN` は classic PAT で十分。
+- repo が public なら `public_repo` scope で足りる。
+- まずは cron-job.org だけ設定し、GitHub cron は backup として残す。
 
 ## 運用メモ
 

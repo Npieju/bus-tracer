@@ -33,7 +33,7 @@ GitHub cron に依存せず、外部 scheduler を主系トリガーとして更
 
 ## 残 TODO
 
-- external scheduler を実際に設定し、dispatch が 5 分前後で継続発火することを確認する。
+- `cron-job.org` を実際に設定し、dispatch が 5 分前後で継続発火することを確認する。
 - GitHub cron は backup として残すか、停止するかを決める。
 - 履歴スナップショットを残すか、latest-state-only でよいか決める。
 - 公開 URL が確定したら health badge や status note の追加を検討する。
