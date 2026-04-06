@@ -6,7 +6,7 @@ on:
     types:
       - external-refresh
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "*/30 * * * *"
   push:
     branches:
       - main
@@ -28,6 +28,9 @@ concurrency:
 
 jobs:
   build:
+    outputs:
+      should_deploy: ${{ steps.freshness_guard.outputs.should_deploy }}
+      skip_reason: ${{ steps.freshness_guard.outputs.skip_reason }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -68,6 +71,51 @@ jobs:
           }, ensure_ascii=False))
           PY
 
+      - name: Guard against older snapshot deploys
+        id: freshness_guard
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import urllib.error
+          import urllib.request
+          from datetime import datetime
+          from pathlib import Path
+
+          event_name = "${{ github.event_name }}"
+          candidate = json.loads(Path("docs/data/status.json").read_text(encoding="utf-8"))
+          candidate_fetched_at = datetime.fromisoformat(candidate["fetchedAt"].replace("Z", "+00:00"))
+
+          should_deploy = True
+          skip_reason = ""
+
+          if event_name in {"schedule", "repository_dispatch"}:
+              request = urllib.request.Request(
+                  "https://npieju.github.io/bus-tracer/data/status.json",
+                  headers={"Accept": "application/json"},
+              )
+              try:
+                  with urllib.request.urlopen(request, timeout=30) as response:
+                      current = json.load(response)
+                  current_fetched_at = datetime.fromisoformat(current["fetchedAt"].replace("Z", "+00:00"))
+                  if current_fetched_at >= candidate_fetched_at:
+                      should_deploy = False
+                      skip_reason = (
+                          "published snapshot is newer or equal "
+                          f"({current['fetchedAt']} >= {candidate['fetchedAt']})"
+                      )
+              except urllib.error.HTTPError as exc:
+                  if exc.code != 404:
+                      raise
+              except urllib.error.URLError:
+                  pass
+
+          output_path = Path(os.environ["GITHUB_OUTPUT"])
+          with output_path.open("a", encoding="utf-8") as handle:
+              handle.write(f"should_deploy={'true' if should_deploy else 'false'}\n")
+              handle.write(f"skip_reason={skip_reason}\n")
+          PY
+
       - name: Write workflow summary
         run: |
           python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
@@ -81,6 +129,10 @@ jobs:
           print(f"- status: {data['status']}")
           print(f"- message: {data['message']}")
           print(f"- fetchedAt: {data['fetchedAt']}")
+          print(f"- should deploy: ${{ steps.freshness_guard.outputs.should_deploy }}")
+          skip_reason = "${{ steps.freshness_guard.outputs.skip_reason }}"
+          if skip_reason:
+              print(f"- skip reason: {skip_reason}")
           for key in data["directionOrder"]:
               direction = data["directions"][key]
               label = direction["direction"]["label"]
@@ -93,6 +145,7 @@ jobs:
           enablement: true
 
       - name: Upload Pages artifact
+        if: steps.freshness_guard.outputs.should_deploy == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: docs
@@ -103,6 +156,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
+    if: needs.build.outputs.should_deploy == 'true'
 
     steps:
       - name: Deploy to GitHub Pages
