@@ -94,6 +94,26 @@ curl -L -X POST \
 
 ## cron-job.org 設定例
 
+実設定では、先に GitHub 側 token と dispatch 疎通を確認してから cron-job.org を入れる。
+
+### 事前にやること
+
+1. GitHub で classic PAT を 1 つ発行する。
+2. public repository なら scope は `public_repo`、private repository なら `repo` を付ける。
+3. その token を一度ローカルで export する。
+
+```bash
+export GITHUB_TOKEN=<YOUR_CLASSIC_PAT>
+```
+
+4. 次のコマンドで dispatch が通り、GitHub Actions run が success まで進むことを確認する。
+
+```bash
+python3 scripts/dispatch_external_refresh.py --wait
+```
+
+このスクリプトは cron-job.org が送るのと同じ `repository_dispatch` を GitHub API に投げ、起動した workflow run の URL と最終結果まで確認する。ここが通らない状態で cron-job.org を設定しても原因切り分けがしづらい。
+
 1. `cron-job.org` に登録する。
 2. `Create cronjob` から新規 job を作る。
 3. URL は `https://api.github.com/repos/Npieju/bus-tracer/dispatches` にする。
@@ -115,12 +135,14 @@ Content-Type: application/json
 
 8. 作成後に `Test run` で 204 が返ることを確認する。
 9. GitHub Actions 側で `repository_dispatch` を受けた run が起動することを確認する。
+10. 障害切り分けでは、まずローカルで `python3 scripts/dispatch_external_refresh.py --wait` を実行し、token 問題か cron-job.org 設定問題かを分ける。
 
 補足:
 
 - `GITHUB_TOKEN` は classic PAT で十分。
 - repo が public なら `public_repo` scope で足りる。
 - まずは cron-job.org だけ設定し、GitHub cron は backup として残す。
+- cron-job.org 側には GitHub PAT をそのまま保存するので、用途はこの repository_dispatch 専用に分ける。
 
 ## 運用メモ
 
