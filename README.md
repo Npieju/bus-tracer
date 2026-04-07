@@ -71,14 +71,15 @@ python3 -m http.server 8000 --directory docs
 
 1. このリポジトリを GitHub に push します。
 2. GitHub 側で Pages のソースを `GitHub Actions` に設定します。
-3. workflow は push 時と手動実行時に GitHub Pages をデプロイします。
-4. external dispatch と backup cron は `docs/data/status.json` を更新して default branch に commit し、その resulting push run が Pages をデプロイします。
+3. workflow は `main` と `live-data` の push 時、および手動実行時に GitHub Pages をデプロイします。
+4. external dispatch と backup cron は `docs/data/status.json` を更新して `live-data` branch に commit し、その resulting push run が Pages をデプロイします。
 
 ## 更新トリガー方針
 
 - GitHub Actions の `schedule` は 5 分間隔で安定しないため、主系の更新トリガーとしては使わない。
 - 主系は外部 scheduler からの `repository_dispatch` とし、GitHub 側の `schedule` は backup 扱いにする。
-- GitHub Pages の workflow artifact deploy は同一 commit SHA だと public site に反映されないことがあるため、`repository_dispatch` と `schedule` は新しい `status.json` を default branch に commit し、その push run で Pages を publish する。
+- GitHub Pages の workflow artifact deploy は同一 commit SHA だと public site に反映されないことがあるため、`repository_dispatch` と `schedule` は新しい `status.json` を `live-data` branch に commit し、その push run で Pages を publish する。
+- app 本体の履歴と snapshot 履歴を分離するため、1 分ごとの更新 commit は `main` ではなく `live-data` にだけ積む。
 - `fetchedAt` だけしか変わっていない場合は無意味な commit を避けるため、commit と deploy を skip する。
 - 推奨サービスは `cron-job.org` とする。無料で 1 分間隔まで設定でき、HTTP POST、任意ヘッダ、実行履歴に対応しているため、この用途に十分。
 - stale snapshot を避けたい場合は、5 分ごとに外部 scheduler から次の endpoint を叩く。
@@ -168,8 +169,8 @@ Content-Type: application/json
 - scheduled workflow は default branch 上でのみ動き、非アクティブなリポジトリでは自動停止されることがあります。
 - GitHub Actions の cron は設定どおりの間隔で走らないことがあり、20 分超から数時間の空白が発生することがあります。
 - upstream の HTML レイアウトが変わった場合でも、workflow summary には直近の取得結果が残り、`status.json` は壊れたデータを黙って公開せず error payload にフォールバックします。
-- `repository_dispatch` と `schedule` は data refresh 専用 run として扱い、meaningful な差分があるときだけ `docs/data/status.json` を commit します。
-- Pages deploy 自体は、その resulting push run が担当します。
+- `repository_dispatch` と `schedule` は data refresh 専用 run として扱い、meaningful な差分があるときだけ `live-data` branch に `docs/data/status.json` を commit します。
+- Pages deploy 自体は、その resulting `live-data` push run が担当します。
 
 補足:
 

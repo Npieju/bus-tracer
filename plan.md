@@ -34,7 +34,7 @@ GitHub cron に依存せず、外部 scheduler を主系トリガーとして更
 ## 残 TODO
 
 - `cron-job.org` を実際に設定し、設定前後で `python3 scripts/dispatch_external_refresh.py --wait` を使って dispatch 疎通を確認する。
-- GitHub cron は 5 分間隔の backup として残し、`schedule` / `repository_dispatch` は `status.json` 更新 commit を作り、push run で Pages を publish する。
+- GitHub cron は 5 分間隔の backup として残し、`schedule` / `repository_dispatch` は `live-data` branch に `status.json` 更新 commit を作り、その push run で Pages を publish する。
 - 履歴スナップショットを残すか、latest-state-only でよいか決める。
 - 公開 URL が確定したら health badge や status note の追加を検討する。
 - upstream 不安定化が繰り返すなら parser 抽出テスト追加を検討する。

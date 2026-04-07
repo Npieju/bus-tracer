@@ -11,6 +11,7 @@ on:
     branches:
       - main
       - master
+      - live-data
     paths:
       - docs/**
       - scripts/**
@@ -24,6 +25,7 @@ permissions:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+  LIVE_DATA_BRANCH: live-data
 
 concurrency:
   group: pages
@@ -49,11 +51,20 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Capture committed status JSON
+      - name: Fetch live-data branch status JSON
         run: |
-          git show HEAD:docs/data/status.json > /tmp/committed-status.json || true
+          git fetch origin "${LIVE_DATA_BRANCH}" || true
+          git show "origin/${LIVE_DATA_BRANCH}:docs/data/status.json" > /tmp/live-data-status.json || true
+
+      - name: Hydrate workspace with latest live snapshot
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        run: |
+          if [[ "${GITHUB_REF_NAME}" != "${LIVE_DATA_BRANCH}" ]] && [[ -s /tmp/live-data-status.json ]]; then
+            cp /tmp/live-data-status.json docs/data/status.json
+          fi
 
       - name: Generate bus status JSON
+        if: github.event_name == 'schedule' || github.event_name == 'repository_dispatch'
         run: python scripts/fetch_bus_data.py --output docs/data/status.json
 
       - name: Validate generated JSON
@@ -101,7 +112,7 @@ jobs:
               return value
 
           current_path = Path("docs/data/status.json")
-          previous_path = Path("/tmp/committed-status.json")
+          previous_path = Path("/tmp/live-data-status.json")
 
           current = json.loads(current_path.read_text(encoding="utf-8"))
           previous_exists = previous_path.exists() and previous_path.stat().st_size > 0
@@ -113,15 +124,25 @@ jobs:
               handle.write(f"should_commit={'true' if should_commit else 'false'}\n")
           PY
 
-      - name: Commit refreshed status JSON
+      - name: Publish refreshed status JSON to live-data branch
         if: (github.event_name == 'schedule' || github.event_name == 'repository_dispatch') && steps.change_assessment.outputs.should_commit == 'true'
         run: |
+          cp docs/data/status.json /tmp/generated-status.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git remote set-url origin "https://x-access-token:${{ secrets.PAGES_PUBLISH_TOKEN }}@github.com/${{ github.repository }}.git"
-          git add docs/data/status.json
+
+          if git show-ref --verify --quiet "refs/remotes/origin/${LIVE_DATA_BRANCH}"; then
+            git switch -C "${LIVE_DATA_BRANCH}" "origin/${LIVE_DATA_BRANCH}"
+          else
+            git switch -C "${LIVE_DATA_BRANCH}" "origin/${{ github.event.repository.default_branch }}"
+          fi
+
+          git checkout "origin/${{ github.event.repository.default_branch }}" -- .
+          cp /tmp/generated-status.json docs/data/status.json
+          git add .
           git commit -m "Update live bus snapshot"
-          git push origin HEAD:${{ github.event.repository.default_branch }}
+          git push origin HEAD:${LIVE_DATA_BRANCH}
 
       - name: Decide publish plan
         id: publish_plan
@@ -139,7 +160,7 @@ jobs:
           if event_name in {"schedule", "repository_dispatch"}:
               should_deploy = False
               if should_commit:
-                  skip_reason = "snapshot committed to the default branch; the resulting push run will deploy"
+                skip_reason = "snapshot committed to the live-data branch; the resulting push run will deploy"
               else:
                   skip_reason = "no meaningful snapshot change beyond fetchedAt; skipping commit and deploy"
 
@@ -162,6 +183,7 @@ jobs:
           print(f"- status: {data['status']}")
           print(f"- message: {data['message']}")
           print(f"- fetchedAt: {data['fetchedAt']}")
+          print(f"- ref: ${{ github.ref_name }}")
           print(f"- should commit: ${{ steps.change_assessment.outputs.should_commit }}")
           print(f"- should deploy: ${{ steps.publish_plan.outputs.should_deploy }}")
           skip_reason = "${{ steps.publish_plan.outputs.skip_reason }}"
