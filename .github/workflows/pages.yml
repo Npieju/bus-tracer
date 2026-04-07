@@ -80,72 +80,72 @@ jobs:
           }, ensure_ascii=False))
           PY
 
-          - name: Detect meaningful snapshot changes
-          id: change_assessment
+      - name: Detect meaningful snapshot changes
+        id: change_assessment
         run: |
           python - <<'PY'
           import json
           import os
           from pathlib import Path
 
-            def strip_fetched_at(value):
+          def strip_fetched_at(value):
               if isinstance(value, dict):
-                return {
-                  key: strip_fetched_at(item)
-                  for key, item in value.items()
-                  if key != "fetchedAt"
-                }
+                  return {
+                      key: strip_fetched_at(item)
+                      for key, item in value.items()
+                      if key != "fetchedAt"
+                  }
               if isinstance(value, list):
-                return [strip_fetched_at(item) for item in value]
+                  return [strip_fetched_at(item) for item in value]
               return value
 
-            current_path = Path("docs/data/status.json")
-            previous_path = Path("/tmp/committed-status.json")
+          current_path = Path("docs/data/status.json")
+          previous_path = Path("/tmp/committed-status.json")
 
-            current = json.loads(current_path.read_text(encoding="utf-8"))
-            previous_exists = previous_path.exists() and previous_path.stat().st_size > 0
-            previous = json.loads(previous_path.read_text(encoding="utf-8")) if previous_exists else None
-            should_commit = (not previous_exists) or (strip_fetched_at(previous) != strip_fetched_at(current))
+          current = json.loads(current_path.read_text(encoding="utf-8"))
+          previous_exists = previous_path.exists() and previous_path.stat().st_size > 0
+          previous = json.loads(previous_path.read_text(encoding="utf-8")) if previous_exists else None
+          should_commit = (not previous_exists) or (strip_fetched_at(previous) != strip_fetched_at(current))
 
           output_path = Path(os.environ["GITHUB_OUTPUT"])
           with output_path.open("a", encoding="utf-8") as handle:
               handle.write(f"should_commit={'true' if should_commit else 'false'}\n")
           PY
 
-          - name: Commit refreshed status JSON
-          if: (github.event_name == 'schedule' || github.event_name == 'repository_dispatch') && steps.change_assessment.outputs.should_commit == 'true'
-          run: |
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add docs/data/status.json
-            git commit -m "Update live bus snapshot"
-            git push origin HEAD:${{ github.event.repository.default_branch }}
+      - name: Commit refreshed status JSON
+        if: (github.event_name == 'schedule' || github.event_name == 'repository_dispatch') && steps.change_assessment.outputs.should_commit == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/data/status.json
+          git commit -m "Update live bus snapshot"
+          git push origin HEAD:${{ github.event.repository.default_branch }}
 
-          - name: Decide publish plan
-          id: publish_plan
-          run: |
-            python - <<'PY'
-            import os
-            from pathlib import Path
+      - name: Decide publish plan
+        id: publish_plan
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
 
-            event_name = "${{ github.event_name }}"
-            should_commit = "${{ steps.change_assessment.outputs.should_commit }}" == "true"
+          event_name = "${{ github.event_name }}"
+          should_commit = "${{ steps.change_assessment.outputs.should_commit }}" == "true"
 
-            should_deploy = True
-            skip_reason = ""
+          should_deploy = True
+          skip_reason = ""
 
-            if event_name in {"schedule", "repository_dispatch"}:
+          if event_name in {"schedule", "repository_dispatch"}:
               should_deploy = False
               if should_commit:
-                skip_reason = "snapshot committed to the default branch; the resulting push run will deploy"
+                  skip_reason = "snapshot committed to the default branch; the resulting push run will deploy"
               else:
-                skip_reason = "no meaningful snapshot change beyond fetchedAt; skipping commit and deploy"
+                  skip_reason = "no meaningful snapshot change beyond fetchedAt; skipping commit and deploy"
 
-            output_path = Path(os.environ["GITHUB_OUTPUT"])
-            with output_path.open("a", encoding="utf-8") as handle:
+          output_path = Path(os.environ["GITHUB_OUTPUT"])
+          with output_path.open("a", encoding="utf-8") as handle:
               handle.write(f"should_deploy={'true' if should_deploy else 'false'}\n")
               handle.write(f"skip_reason={skip_reason}\n")
-            PY
+          PY
 
       - name: Write workflow summary
         run: |
@@ -160,9 +160,9 @@ jobs:
           print(f"- status: {data['status']}")
           print(f"- message: {data['message']}")
           print(f"- fetchedAt: {data['fetchedAt']}")
-            print(f"- should commit: ${{ steps.change_assessment.outputs.should_commit }}")
-            print(f"- should deploy: ${{ steps.publish_plan.outputs.should_deploy }}")
-            skip_reason = "${{ steps.publish_plan.outputs.skip_reason }}"
+          print(f"- should commit: ${{ steps.change_assessment.outputs.should_commit }}")
+          print(f"- should deploy: ${{ steps.publish_plan.outputs.should_deploy }}")
+          skip_reason = "${{ steps.publish_plan.outputs.skip_reason }}"
           if skip_reason:
               print(f"- skip reason: {skip_reason}")
           for key in data["directionOrder"]:
