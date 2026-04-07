@@ -18,7 +18,7 @@ on:
       - README.md
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -32,19 +32,25 @@ concurrency:
 jobs:
   build:
     outputs:
-      should_deploy: ${{ steps.freshness_guard.outputs.should_deploy }}
-      skip_reason: ${{ steps.freshness_guard.outputs.skip_reason }}
+      should_deploy: ${{ steps.publish_plan.outputs.should_deploy }}
+      skip_reason: ${{ steps.publish_plan.outputs.skip_reason }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v6
+        with:
+          ref: ${{ github.ref_name || github.event.repository.default_branch }}
 
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+
+      - name: Capture committed status JSON
+        run: |
+          git show HEAD:docs/data/status.json > /tmp/committed-status.json || true
 
       - name: Generate bus status JSON
         run: python scripts/fetch_bus_data.py --output docs/data/status.json
@@ -74,50 +80,72 @@ jobs:
           }, ensure_ascii=False))
           PY
 
-      - name: Guard against older snapshot deploys
-        id: freshness_guard
+          - name: Detect meaningful snapshot changes
+          id: change_assessment
         run: |
           python - <<'PY'
           import json
           import os
-          import urllib.error
-          import urllib.request
-          from datetime import datetime
           from pathlib import Path
 
-          event_name = "${{ github.event_name }}"
-          candidate = json.loads(Path("docs/data/status.json").read_text(encoding="utf-8"))
-          candidate_fetched_at = datetime.fromisoformat(candidate["fetchedAt"].replace("Z", "+00:00"))
+            def strip_fetched_at(value):
+              if isinstance(value, dict):
+                return {
+                  key: strip_fetched_at(item)
+                  for key, item in value.items()
+                  if key != "fetchedAt"
+                }
+              if isinstance(value, list):
+                return [strip_fetched_at(item) for item in value]
+              return value
 
-          should_deploy = True
-          skip_reason = ""
+            current_path = Path("docs/data/status.json")
+            previous_path = Path("/tmp/committed-status.json")
 
-          if event_name in {"schedule", "repository_dispatch"}:
-              request = urllib.request.Request(
-                  "https://npieju.github.io/bus-tracer/data/status.json",
-                  headers={"Accept": "application/json"},
-              )
-              try:
-                  with urllib.request.urlopen(request, timeout=30) as response:
-                      current = json.load(response)
-                  current_fetched_at = datetime.fromisoformat(current["fetchedAt"].replace("Z", "+00:00"))
-                  if current_fetched_at >= candidate_fetched_at:
-                      should_deploy = False
-                      skip_reason = (
-                          "published snapshot is newer or equal "
-                          f"({current['fetchedAt']} >= {candidate['fetchedAt']})"
-                      )
-              except urllib.error.HTTPError as exc:
-                  if exc.code != 404:
-                      raise
-              except urllib.error.URLError:
-                  pass
+            current = json.loads(current_path.read_text(encoding="utf-8"))
+            previous_exists = previous_path.exists() and previous_path.stat().st_size > 0
+            previous = json.loads(previous_path.read_text(encoding="utf-8")) if previous_exists else None
+            should_commit = (not previous_exists) or (strip_fetched_at(previous) != strip_fetched_at(current))
 
           output_path = Path(os.environ["GITHUB_OUTPUT"])
           with output_path.open("a", encoding="utf-8") as handle:
+              handle.write(f"should_commit={'true' if should_commit else 'false'}\n")
+          PY
+
+          - name: Commit refreshed status JSON
+          if: (github.event_name == 'schedule' || github.event_name == 'repository_dispatch') && steps.change_assessment.outputs.should_commit == 'true'
+          run: |
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add docs/data/status.json
+            git commit -m "Update live bus snapshot"
+            git push origin HEAD:${{ github.event.repository.default_branch }}
+
+          - name: Decide publish plan
+          id: publish_plan
+          run: |
+            python - <<'PY'
+            import os
+            from pathlib import Path
+
+            event_name = "${{ github.event_name }}"
+            should_commit = "${{ steps.change_assessment.outputs.should_commit }}" == "true"
+
+            should_deploy = True
+            skip_reason = ""
+
+            if event_name in {"schedule", "repository_dispatch"}:
+              should_deploy = False
+              if should_commit:
+                skip_reason = "snapshot committed to the default branch; the resulting push run will deploy"
+              else:
+                skip_reason = "no meaningful snapshot change beyond fetchedAt; skipping commit and deploy"
+
+            output_path = Path(os.environ["GITHUB_OUTPUT"])
+            with output_path.open("a", encoding="utf-8") as handle:
               handle.write(f"should_deploy={'true' if should_deploy else 'false'}\n")
               handle.write(f"skip_reason={skip_reason}\n")
-          PY
+            PY
 
       - name: Write workflow summary
         run: |
@@ -132,8 +160,9 @@ jobs:
           print(f"- status: {data['status']}")
           print(f"- message: {data['message']}")
           print(f"- fetchedAt: {data['fetchedAt']}")
-          print(f"- should deploy: ${{ steps.freshness_guard.outputs.should_deploy }}")
-          skip_reason = "${{ steps.freshness_guard.outputs.skip_reason }}"
+            print(f"- should commit: ${{ steps.change_assessment.outputs.should_commit }}")
+            print(f"- should deploy: ${{ steps.publish_plan.outputs.should_deploy }}")
+            skip_reason = "${{ steps.publish_plan.outputs.skip_reason }}"
           if skip_reason:
               print(f"- skip reason: {skip_reason}")
           for key in data["directionOrder"]:
@@ -143,12 +172,13 @@ jobs:
           PY
 
       - name: Configure Pages
+        if: steps.publish_plan.outputs.should_deploy == 'true'
         uses: actions/configure-pages@v6
         with:
           enablement: true
 
       - name: Upload Pages artifact
-        if: steps.freshness_guard.outputs.should_deploy == 'true'
+        if: steps.publish_plan.outputs.should_deploy == 'true'
         uses: actions/upload-pages-artifact@v4
         with:
           path: docs

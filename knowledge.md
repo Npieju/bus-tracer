@@ -20,7 +20,9 @@
 - フロントエンドは `status.json` を読み、ブラウザ内でも 5 分ごとに再取得する。
 - 通常の機能追加・調整は、別途確認なしで commit / push して Pages 反映まで進める前提で運用する。
 - GitHub Actions `schedule` は発火間隔が不安定なので、鮮度要件を満たす主系トリガーとしては使わず、external scheduler の dispatch を主系とする。
-- backup の GitHub Actions `schedule` は 5 分間隔のまま残し、workflow 側で現在公開中の `fetchedAt` 以上なら deploy を skip する。
+- GitHub Pages の workflow artifact deploy は同一 `head_sha` で繰り返すと public site が更新されないことがある。
+- そのため `repository_dispatch` / `schedule` run は `docs/data/status.json` を default branch に commit し、resulting push run で Pages を publish する。
+- `fetchedAt` 以外の meaningful diff がないときは commit しない。
 - 現時点の推奨 external scheduler は `cron-job.org`。
 - `scripts/dispatch_external_refresh.py --wait` で、外部 scheduler と同じ `repository_dispatch` をローカルから打って workflow run 完了まで検証できる。
 
