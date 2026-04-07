@@ -128,6 +128,7 @@ jobs:
         if: (github.event_name == 'schedule' || github.event_name == 'repository_dispatch') && steps.change_assessment.outputs.should_commit == 'true'
         run: |
           cp docs/data/status.json /tmp/generated-status.json
+          git reset --hard HEAD
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git remote set-url origin "https://x-access-token:${{ secrets.PAGES_PUBLISH_TOKEN }}@github.com/${{ github.repository }}.git"
