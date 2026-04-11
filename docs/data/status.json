@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "fetchedAt": "2026-04-11T07:30:10.475176Z",
+  "fetchedAt": "2026-04-11T07:30:23.827118Z",
   "status": "ok",
   "message": "双方向のデータを取得しました。",
   "directionOrder": [
@@ -11,7 +11,7 @@
   "directions": {
     "forward": {
       "status": "ok",
-      "fetchedAt": "2026-04-11T07:30:08.219121Z",
+      "fetchedAt": "2026-04-11T07:30:21.618402Z",
       "message": "接近情報を取得しました。",
       "hasLiveData": true,
       "route": {
@@ -53,7 +53,7 @@
           "cashFare": "230円",
           "icFare": "230円",
           "updatedAtText": "(最終更新 16:30）",
-          "headline": "出発停留所にあと 7分 で到着 運行中",
+          "headline": "出発停留所にあと 6分 で到着 運行中",
           "statusNotes": [
             "（ 1分 遅れ）"
           ],
@@ -66,7 +66,7 @@
           ],
           "departureScheduledTime": null,
           "sourceUpdatedTime": "16:30",
-          "arrivalInMinutes": 7,
+          "arrivalInMinutes": 6,
           "delayMinutes": 1,
           "scheduledArrivalTime": "16:36",
           "expectedArrivalTime": "16:37",
@@ -393,7 +393,7 @@
         "運行状況により、所要時分は異なります。目安としてお考えください。",
         "「この便は、正確な情報が提供出来ていない可能性があります。」と表示されている際は、「車載器等の故障」、「運行予定の車両と別の車両で運行中」、「大幅な遅延」等の可能性があります。担当営業所までお問い合わせください。",
         "(最終更新 16:30）",
-        "出発停留所にあと 7分 で到着 運行中",
+        "出発停留所にあと 6分 で到着 運行中",
         "（ 1分 遅れ）",
         "平塚球場",
         "西新町",
@@ -707,7 +707,7 @@
     },
     "reverse": {
       "status": "ok",
-      "fetchedAt": "2026-04-11T07:30:10.472757Z",
+      "fetchedAt": "2026-04-11T07:30:23.824578Z",
       "message": "接近情報を取得しました。",
       "hasLiveData": true,
       "route": {
