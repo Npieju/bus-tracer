@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "fetchedAt": "2026-04-13T17:16:19.481360Z",
+  "fetchedAt": "2026-04-13T17:17:18.793225Z",
   "status": "error",
   "message": "双方向のデータ取得に失敗しました。",
   "directionOrder": [
@@ -11,7 +11,7 @@
   "directions": {
     "forward": {
       "status": "error",
-      "fetchedAt": "2026-04-13T17:16:18.241783Z",
+      "fetchedAt": "2026-04-13T17:17:17.548087Z",
       "message": "データ取得に失敗しました。次回の自動更新を待ってください。",
       "hasLiveData": false,
       "route": {
@@ -33,7 +33,7 @@
       "notices": [],
       "journeys": [],
       "details": [
-        "HTTP Error 503: Service Unavailable"
+        "HTTP Error 404: Not Found"
       ],
       "direction": {
         "key": "forward",
@@ -43,7 +43,7 @@
     },
     "reverse": {
       "status": "error",
-      "fetchedAt": "2026-04-13T17:16:19.480980Z",
+      "fetchedAt": "2026-04-13T17:17:18.792750Z",
       "message": "データ取得に失敗しました。次回の自動更新を待ってください。",
       "hasLiveData": false,
       "route": {
@@ -65,7 +65,7 @@
       "notices": [],
       "journeys": [],
       "details": [
-        "HTTP Error 503: Service Unavailable"
+        "HTTP Error 404: Not Found"
       ],
       "direction": {
         "key": "reverse",
