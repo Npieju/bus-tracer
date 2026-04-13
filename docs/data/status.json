@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "fetchedAt": "2026-04-13T14:01:19.181773Z",
+  "fetchedAt": "2026-04-13T14:02:19.252333Z",
   "status": "ok",
   "message": "双方向のデータを取得しました。",
   "directionOrder": [
@@ -11,7 +11,7 @@
   "directions": {
     "forward": {
       "status": "ok",
-      "fetchedAt": "2026-04-13T14:01:17.072591Z",
+      "fetchedAt": "2026-04-13T14:02:17.347908Z",
       "message": "接近情報を取得しました。",
       "hasLiveData": true,
       "route": {
@@ -48,15 +48,13 @@
           "vehicleNumber": "ひ10",
           "vehicleMark": "※",
           "accessibilityLabel": "ノンステップ",
-          "duration": "4分",
+          "duration": "5分",
           "durationNote": "（予測）",
           "cashFare": "230円",
           "icFare": "230円",
-          "updatedAtText": "(最終更新 23:01）",
-          "headline": "出発停留所にあと 8分 で到着 運行中",
-          "statusNotes": [
-            "（ 0分 遅れ）"
-          ],
+          "updatedAtText": "(最終更新 23:02）",
+          "headline": "出発停留所にあと 6分 で到着 運行中",
+          "statusNotes": [],
           "stops": [
             "平塚球場",
             "西新町",
@@ -65,9 +63,9 @@
             "出発停留所"
           ],
           "departureScheduledTime": null,
-          "sourceUpdatedTime": "23:01",
-          "arrivalInMinutes": 8,
-          "delayMinutes": 0,
+          "sourceUpdatedTime": "23:02",
+          "arrivalInMinutes": 6,
+          "delayMinutes": null,
           "scheduledArrivalTime": "23:09",
           "expectedArrivalTime": "23:09",
           "arrivalScheduled": "（23:09着予定）"
@@ -93,7 +91,7 @@
         "※",
         "乗車バス停から降車バス停までの所要時分",
         "所要時分",
-        "4分",
+        "5分",
         "（予測）",
         "運賃(大人)",
         "現金",
@@ -104,9 +102,8 @@
         "Ｔ印はＴｗｉｎＬｉｎｅｒです。",
         "運行状況により、所要時分は異なります。目安としてお考えください。",
         "「この便は、正確な情報が提供出来ていない可能性があります。」と表示されている際は、「車載器等の故障」、「運行予定の車両と別の車両で運行中」、「大幅な遅延」等の可能性があります。担当営業所までお問い合わせください。",
-        "(最終更新 23:01）",
-        "出発停留所にあと 8分 で到着 運行中",
-        "（ 0分 遅れ）",
+        "(最終更新 23:02）",
+        "出発停留所にあと 6分 で到着 運行中",
         "平塚球場",
         "西新町",
         "中原東",
@@ -122,7 +119,7 @@
     },
     "reverse": {
       "status": "ok",
-      "fetchedAt": "2026-04-13T14:01:19.181576Z",
+      "fetchedAt": "2026-04-13T14:02:19.252148Z",
       "message": "該当する情報は現在ありません。",
       "hasLiveData": false,
       "route": {
