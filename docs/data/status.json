@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
-  "fetchedAt": "2026-04-13T17:23:18.005289Z",
-  "status": "error",
-  "message": "双方向のデータ取得に失敗しました。",
+  "fetchedAt": "2026-04-13T17:24:20.239751Z",
+  "status": "ok",
+  "message": "双方向のデータを取得しました。",
   "directionOrder": [
     "forward",
     "reverse"
@@ -10,9 +10,9 @@
   "defaultDirection": "forward",
   "directions": {
     "forward": {
-      "status": "error",
-      "fetchedAt": "2026-04-13T17:23:16.948108Z",
-      "message": "データ取得に失敗しました。次回の自動更新を待ってください。",
+      "status": "ok",
+      "fetchedAt": "2026-04-13T17:24:19.070150Z",
+      "message": "該当する情報は現在ありません。",
       "hasLiveData": false,
       "route": {
         "fromStop": {
@@ -27,13 +27,17 @@
       "source": {
         "name": "神奈中バスロケーション",
         "url": "https://real.kanachu.jp/pc/top",
-        "pageTitle": null
+        "pageTitle": "出発停留所〜目的停留所 接近情報検索結果 | 接近情報検索 | 神奈中バスロケ"
       },
       "overview": [],
       "notices": [],
       "journeys": [],
       "details": [
-        "HTTP Error 503: Service Unavailable"
+        "該当する情報は現在ありません。",
+        "乗車バス停",
+        "出発停留所",
+        "降車バス停",
+        "目的停留所"
       ],
       "direction": {
         "key": "forward",
@@ -42,9 +46,9 @@
       }
     },
     "reverse": {
-      "status": "error",
-      "fetchedAt": "2026-04-13T17:23:18.004949Z",
-      "message": "データ取得に失敗しました。次回の自動更新を待ってください。",
+      "status": "ok",
+      "fetchedAt": "2026-04-13T17:24:20.239563Z",
+      "message": "該当する情報は現在ありません。",
       "hasLiveData": false,
       "route": {
         "fromStop": {
@@ -59,13 +63,17 @@
       "source": {
         "name": "神奈中バスロケーション",
         "url": "https://real.kanachu.jp/pc/top",
-        "pageTitle": null
+        "pageTitle": "目的停留所〜出発停留所 接近情報検索結果 | 接近情報検索 | 神奈中バスロケ"
       },
       "overview": [],
       "notices": [],
       "journeys": [],
       "details": [
-        "HTTP Error 503: Service Unavailable"
+        "該当する情報は現在ありません。",
+        "乗車バス停",
+        "目的停留所",
+        "降車バス停",
+        "出発停留所"
       ],
       "direction": {
         "key": "reverse",
