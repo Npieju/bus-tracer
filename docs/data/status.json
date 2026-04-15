@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "fetchedAt": "2026-04-15T14:12:21.075834Z",
+  "fetchedAt": "2026-04-15T14:13:23.157879Z",
   "status": "ok",
   "message": "双方向のデータを取得しました。",
   "directionOrder": [
@@ -11,7 +11,7 @@
   "directions": {
     "forward": {
       "status": "ok",
-      "fetchedAt": "2026-04-15T14:12:19.369564Z",
+      "fetchedAt": "2026-04-15T14:13:22.020289Z",
       "message": "接近情報を取得しました。",
       "hasLiveData": true,
       "route": {
@@ -52,11 +52,9 @@
           "durationNote": "（予測）",
           "cashFare": "230円",
           "icFare": "230円",
-          "updatedAtText": "(最終更新 23:12）",
-          "headline": "まもなく到着",
-          "statusNotes": [
-            "（ 3分 遅れ）"
-          ],
+          "updatedAtText": "(最終更新 23:13）",
+          "headline": "停留所への到着が遅れております。",
+          "statusNotes": [],
           "stops": [
             "平塚球場",
             "西新町",
@@ -65,12 +63,12 @@
             "出発停留所"
           ],
           "departureScheduledTime": null,
-          "sourceUpdatedTime": "23:12",
+          "sourceUpdatedTime": "23:13",
           "arrivalInMinutes": null,
-          "delayMinutes": 3,
-          "scheduledArrivalTime": "23:09",
-          "expectedArrivalTime": "23:12",
-          "arrivalScheduled": "（23:12着予定）"
+          "delayMinutes": null,
+          "scheduledArrivalTime": null,
+          "expectedArrivalTime": null,
+          "arrivalScheduled": null
         }
       ],
       "details": [
@@ -104,15 +102,13 @@
         "Ｔ印はＴｗｉｎＬｉｎｅｒです。",
         "運行状況により、所要時分は異なります。目安としてお考えください。",
         "「この便は、正確な情報が提供出来ていない可能性があります。」と表示されている際は、「車載器等の故障」、「運行予定の車両と別の車両で運行中」、「大幅な遅延」等の可能性があります。担当営業所までお問い合わせください。",
-        "(最終更新 23:12）",
-        "まもなく到着",
-        "（ 3分 遅れ）",
+        "(最終更新 23:13）",
+        "停留所への到着が遅れております。",
         "平塚球場",
         "西新町",
         "中原東",
         "中原中宿",
-        "出発停留所",
-        "（23:12着予定）"
+        "出発停留所"
       ],
       "direction": {
         "key": "forward",
@@ -122,7 +118,7 @@
     },
     "reverse": {
       "status": "ok",
-      "fetchedAt": "2026-04-15T14:12:21.075631Z",
+      "fetchedAt": "2026-04-15T14:13:23.157688Z",
       "message": "該当する情報は現在ありません。",
       "hasLiveData": false,
       "route": {
