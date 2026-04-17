@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "fetchedAt": "2026-04-17T17:30:28.501051Z",
+  "fetchedAt": "2026-04-17T17:45:40.318528Z",
   "status": "error",
   "message": "双方向のデータ取得に失敗しました。",
   "directionOrder": [
@@ -11,7 +11,7 @@
   "directions": {
     "forward": {
       "status": "error",
-      "fetchedAt": "2026-04-17T17:30:26.984849Z",
+      "fetchedAt": "2026-04-17T17:44:57.249845Z",
       "message": "データ取得に失敗しました。次回の自動更新を待ってください。",
       "hasLiveData": false,
       "route": {
@@ -33,7 +33,7 @@
       "notices": [],
       "journeys": [],
       "details": [
-        "接近情報ページのタイトルを確認できませんでした。"
+        "<urlopen error _ssl.c:993: The handshake operation timed out>"
       ],
       "direction": {
         "key": "forward",
@@ -43,7 +43,7 @@
     },
     "reverse": {
       "status": "error",
-      "fetchedAt": "2026-04-17T17:30:28.500939Z",
+      "fetchedAt": "2026-04-17T17:45:40.318245Z",
       "message": "データ取得に失敗しました。次回の自動更新を待ってください。",
       "hasLiveData": false,
       "route": {
@@ -65,7 +65,7 @@
       "notices": [],
       "journeys": [],
       "details": [
-        "接近情報ページのタイトルを確認できませんでした。"
+        "The read operation timed out"
       ],
       "direction": {
         "key": "reverse",
