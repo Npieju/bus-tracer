@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "fetchedAt": "2026-04-18T10:09:17.764719Z",
+  "fetchedAt": "2026-04-18T10:09:58.084697Z",
   "status": "ok",
   "message": "双方向のデータを取得しました。",
   "directionOrder": [
@@ -11,7 +11,7 @@
   "directions": {
     "forward": {
       "status": "ok",
-      "fetchedAt": "2026-04-18T10:09:15.579663Z",
+      "fetchedAt": "2026-04-18T10:09:56.287665Z",
       "message": "接近情報を取得しました。",
       "hasLiveData": true,
       "route": {
@@ -707,7 +707,7 @@
     },
     "reverse": {
       "status": "ok",
-      "fetchedAt": "2026-04-18T10:09:17.763996Z",
+      "fetchedAt": "2026-04-18T10:09:58.083962Z",
       "message": "接近情報を取得しました。",
       "hasLiveData": true,
       "route": {
@@ -749,7 +749,7 @@
           "cashFare": "230円",
           "icFare": "230円",
           "updatedAtText": "(最終更新 19:09）",
-          "headline": "目的停留所にあと 23分 で到着 運行中",
+          "headline": "目的停留所にあと 22分 で到着 運行中",
           "statusNotes": [
             "（ 3分 遅れ）"
           ],
@@ -762,7 +762,7 @@
           ],
           "departureScheduledTime": null,
           "sourceUpdatedTime": "19:09",
-          "arrivalInMinutes": 23,
+          "arrivalInMinutes": 22,
           "delayMinutes": 3,
           "scheduledArrivalTime": "19:29",
           "expectedArrivalTime": "19:32",
@@ -833,7 +833,7 @@
         "運行状況により、所要時分は異なります。目安としてお考えください。",
         "「この便は、正確な情報が提供出来ていない可能性があります。」と表示されている際は、「車載器等の故障」、「運行予定の車両と別の車両で運行中」、「大幅な遅延」等の可能性があります。担当営業所までお問い合わせください。",
         "(最終更新 19:09）",
-        "目的停留所にあと 23分 で到着 運行中",
+        "目的停留所にあと 22分 で到着 運行中",
         "（ 3分 遅れ）",
         "横内団地前",
         "今里",
