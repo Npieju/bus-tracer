@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "fetchedAt": "2026-04-18T07:46:19.771907Z",
+  "fetchedAt": "2026-04-18T07:46:57.742213Z",
   "status": "ok",
   "message": "双方向のデータを取得しました。",
   "directionOrder": [
@@ -11,7 +11,7 @@
   "directions": {
     "forward": {
       "status": "ok",
-      "fetchedAt": "2026-04-18T07:46:17.679876Z",
+      "fetchedAt": "2026-04-18T07:46:56.194880Z",
       "message": "接近情報を取得しました。",
       "hasLiveData": true,
       "route": {
@@ -53,7 +53,7 @@
           "cashFare": "230円",
           "icFare": "230円",
           "updatedAtText": "(最終更新 16:46）",
-          "headline": "出発停留所にあと 10分 で到着 運行中",
+          "headline": "出発停留所にあと 9分 で到着 運行中",
           "statusNotes": [
             "（ 7分 遅れ）"
           ],
@@ -66,7 +66,7 @@
           ],
           "departureScheduledTime": null,
           "sourceUpdatedTime": "16:46",
-          "arrivalInMinutes": 10,
+          "arrivalInMinutes": 9,
           "delayMinutes": 7,
           "scheduledArrivalTime": "16:49",
           "expectedArrivalTime": "16:56",
@@ -393,7 +393,7 @@
         "運行状況により、所要時分は異なります。目安としてお考えください。",
         "「この便は、正確な情報が提供出来ていない可能性があります。」と表示されている際は、「車載器等の故障」、「運行予定の車両と別の車両で運行中」、「大幅な遅延」等の可能性があります。担当営業所までお問い合わせください。",
         "(最終更新 16:46）",
-        "出発停留所にあと 10分 で到着 運行中",
+        "出発停留所にあと 9分 で到着 運行中",
         "（ 7分 遅れ）",
         "平塚球場",
         "西新町",
@@ -707,7 +707,7 @@
     },
     "reverse": {
       "status": "ok",
-      "fetchedAt": "2026-04-18T07:46:19.769429Z",
+      "fetchedAt": "2026-04-18T07:46:57.739675Z",
       "message": "接近情報を取得しました。",
       "hasLiveData": true,
       "route": {
@@ -749,7 +749,7 @@
           "cashFare": "230円",
           "icFare": "230円",
           "updatedAtText": "(最終更新 16:46）",
-          "headline": "目的停留所にあと 6分 で到着 運行中",
+          "headline": "目的停留所にあと 5分 で到着 運行中",
           "statusNotes": [
             "（ 8分 遅れ）"
           ],
@@ -762,7 +762,7 @@
           ],
           "departureScheduledTime": null,
           "sourceUpdatedTime": "16:46",
-          "arrivalInMinutes": 6,
+          "arrivalInMinutes": 5,
           "delayMinutes": 8,
           "scheduledArrivalTime": "16:44",
           "expectedArrivalTime": "16:52",
@@ -781,7 +781,7 @@
           "cashFare": "230円",
           "icFare": "230円",
           "updatedAtText": "(最終更新 16:46）",
-          "headline": "目的停留所にあと 26分 で到着 運行中",
+          "headline": "目的停留所にあと 25分 で到着 運行中",
           "statusNotes": [
             "（ 8分 遅れ）"
           ],
@@ -794,7 +794,7 @@
           ],
           "departureScheduledTime": null,
           "sourceUpdatedTime": "16:46",
-          "arrivalInMinutes": 26,
+          "arrivalInMinutes": 25,
           "delayMinutes": 8,
           "scheduledArrivalTime": "17:04",
           "expectedArrivalTime": "17:12",
@@ -1089,7 +1089,7 @@
         "運行状況により、所要時分は異なります。目安としてお考えください。",
         "「この便は、正確な情報が提供出来ていない可能性があります。」と表示されている際は、「車載器等の故障」、「運行予定の車両と別の車両で運行中」、「大幅な遅延」等の可能性があります。担当営業所までお問い合わせください。",
         "(最終更新 16:46）",
-        "目的停留所にあと 6分 で到着 運行中",
+        "目的停留所にあと 5分 で到着 運行中",
         "（ 8分 遅れ）",
         "横内団地前",
         "今里",
@@ -1122,7 +1122,7 @@
         "運行状況により、所要時分は異なります。目安としてお考えください。",
         "「この便は、正確な情報が提供出来ていない可能性があります。」と表示されている際は、「車載器等の故障」、「運行予定の車両と別の車両で運行中」、「大幅な遅延」等の可能性があります。担当営業所までお問い合わせください。",
         "(最終更新 16:46）",
-        "目的停留所にあと 26分 で到着 運行中",
+        "目的停留所にあと 25分 で到着 運行中",
         "（ 8分 遅れ）",
         "横内団地前",
         "今里",
