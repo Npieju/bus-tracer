@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "fetchedAt": "2026-04-23T14:04:22.870612Z",
+  "fetchedAt": "2026-04-23T14:05:24.343422Z",
   "status": "ok",
   "message": "双方向のデータを取得しました。",
   "directionOrder": [
@@ -11,7 +11,7 @@
   "directions": {
     "forward": {
       "status": "ok",
-      "fetchedAt": "2026-04-23T14:04:21.286425Z",
+      "fetchedAt": "2026-04-23T14:05:22.685885Z",
       "message": "接近情報を取得しました。",
       "hasLiveData": true,
       "route": {
@@ -52,8 +52,8 @@
           "durationNote": "（予測）",
           "cashFare": "230円",
           "icFare": "230円",
-          "updatedAtText": "(最終更新 23:04）",
-          "headline": "出発停留所にあと 4分 で到着 運行中",
+          "updatedAtText": "(最終更新 23:05）",
+          "headline": "出発停留所にあと 3分 で到着 運行中",
           "statusNotes": [],
           "stops": [
             "平塚球場",
@@ -63,8 +63,8 @@
             "出発停留所"
           ],
           "departureScheduledTime": null,
-          "sourceUpdatedTime": "23:04",
-          "arrivalInMinutes": 4,
+          "sourceUpdatedTime": "23:05",
+          "arrivalInMinutes": 3,
           "delayMinutes": null,
           "scheduledArrivalTime": "23:09",
           "expectedArrivalTime": "23:09",
@@ -102,8 +102,8 @@
         "Ｔ印はＴｗｉｎＬｉｎｅｒです。",
         "運行状況により、所要時分は異なります。目安としてお考えください。",
         "「この便は、正確な情報が提供出来ていない可能性があります。」と表示されている際は、「車載器等の故障」、「運行予定の車両と別の車両で運行中」、「大幅な遅延」等の可能性があります。担当営業所までお問い合わせください。",
-        "(最終更新 23:04）",
-        "出発停留所にあと 4分 で到着 運行中",
+        "(最終更新 23:05）",
+        "出発停留所にあと 3分 で到着 運行中",
         "平塚球場",
         "西新町",
         "中原東",
@@ -119,7 +119,7 @@
     },
     "reverse": {
       "status": "ok",
-      "fetchedAt": "2026-04-23T14:04:22.870392Z",
+      "fetchedAt": "2026-04-23T14:05:24.343242Z",
       "message": "該当する情報は現在ありません。",
       "hasLiveData": false,
       "route": {
