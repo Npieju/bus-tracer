@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "fetchedAt": "2026-04-30T22:36:11.925743Z",
+  "fetchedAt": "2026-04-30T22:36:28.393984Z",
   "status": "ok",
   "message": "双方向のデータを取得しました。",
   "directionOrder": [
@@ -11,7 +11,7 @@
   "directions": {
     "forward": {
       "status": "ok",
-      "fetchedAt": "2026-04-30T22:36:09.601955Z",
+      "fetchedAt": "2026-04-30T22:36:26.777297Z",
       "message": "接近情報を取得しました。",
       "hasLiveData": true,
       "route": {
@@ -48,12 +48,12 @@
           "vehicleNumber": "ひ92",
           "vehicleMark": "※",
           "accessibilityLabel": "ノンステップ",
-          "duration": "5分",
+          "duration": "4分",
           "durationNote": "（予測）",
           "cashFare": "230円",
           "icFare": "230円",
           "updatedAtText": "(最終更新 07:36）",
-          "headline": "出発停留所にあと 2分 で到着 運行中",
+          "headline": "出発停留所にあと 3分 で到着 運行中",
           "statusNotes": [
             "（ 8分 遅れ）"
           ],
@@ -66,7 +66,7 @@
           ],
           "departureScheduledTime": null,
           "sourceUpdatedTime": "07:36",
-          "arrivalInMinutes": 2,
+          "arrivalInMinutes": 3,
           "delayMinutes": 8,
           "scheduledArrivalTime": "07:31",
           "expectedArrivalTime": "07:39",
@@ -381,7 +381,7 @@
         "※",
         "乗車バス停から降車バス停までの所要時分",
         "所要時分",
-        "5分",
+        "4分",
         "（予測）",
         "運賃(大人)",
         "現金",
@@ -393,7 +393,7 @@
         "運行状況により、所要時分は異なります。目安としてお考えください。",
         "「この便は、正確な情報が提供出来ていない可能性があります。」と表示されている際は、「車載器等の故障」、「運行予定の車両と別の車両で運行中」、「大幅な遅延」等の可能性があります。担当営業所までお問い合わせください。",
         "(最終更新 07:36）",
-        "出発停留所にあと 2分 で到着 運行中",
+        "出発停留所にあと 3分 で到着 運行中",
         "（ 8分 遅れ）",
         "平塚球場",
         "西新町",
@@ -707,7 +707,7 @@
     },
     "reverse": {
       "status": "ok",
-      "fetchedAt": "2026-04-30T22:36:11.923193Z",
+      "fetchedAt": "2026-04-30T22:36:28.391665Z",
       "message": "接近情報を取得しました。",
       "hasLiveData": true,
       "route": {
@@ -749,10 +749,8 @@
           "cashFare": "230円",
           "icFare": "230円",
           "updatedAtText": "(最終更新 07:36）",
-          "headline": "まもなく到着",
-          "statusNotes": [
-            "（ 7分 遅れ）"
-          ],
+          "headline": "停留所への到着が遅れております。",
+          "statusNotes": [],
           "stops": [
             "前鳥神社前",
             "大念寺前",
@@ -763,10 +761,10 @@
           "departureScheduledTime": null,
           "sourceUpdatedTime": "07:36",
           "arrivalInMinutes": null,
-          "delayMinutes": 7,
-          "scheduledArrivalTime": "07:29",
-          "expectedArrivalTime": "07:36",
-          "arrivalScheduled": "（7:36着予定）"
+          "delayMinutes": null,
+          "scheduledArrivalTime": null,
+          "expectedArrivalTime": null,
+          "arrivalScheduled": null
         },
         {
           "rank": 2,
@@ -1089,14 +1087,12 @@
         "運行状況により、所要時分は異なります。目安としてお考えください。",
         "「この便は、正確な情報が提供出来ていない可能性があります。」と表示されている際は、「車載器等の故障」、「運行予定の車両と別の車両で運行中」、「大幅な遅延」等の可能性があります。担当営業所までお問い合わせください。",
         "(最終更新 07:36）",
-        "まもなく到着",
-        "（ 7分 遅れ）",
+        "停留所への到着が遅れております。",
         "前鳥神社前",
         "大念寺前",
         "東真土",
         "真土",
         "目的停留所",
-        "（7:36着予定）",
         "早い順 2",
         "バスの系統と、行き先、経由",
         "系統",
