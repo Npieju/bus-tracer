@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "fetchedAt": "2026-05-03T13:40:30.487415Z",
+  "fetchedAt": "2026-05-03T13:41:20.273412Z",
   "status": "ok",
   "message": "双方向のデータを取得しました。",
   "directionOrder": [
@@ -11,7 +11,7 @@
   "directions": {
     "forward": {
       "status": "ok",
-      "fetchedAt": "2026-05-03T13:40:29.056138Z",
+      "fetchedAt": "2026-05-03T13:41:18.787201Z",
       "message": "接近情報を取得しました。",
       "hasLiveData": true,
       "route": {
@@ -48,28 +48,29 @@
           "vehicleNumber": "ひ23",
           "vehicleMark": "※",
           "accessibilityLabel": "ノンステップ",
-          "duration": "5分",
-          "durationNote": "（通常）",
+          "duration": "4分",
+          "durationNote": "（予測）",
           "cashFare": "230円",
           "icFare": "230円",
-          "updatedAtText": "(最終更新 22:40）",
-          "headline": "平塚駅北口を22:33発予定",
-          "statusNotes": [],
+          "updatedAtText": "(最終更新 22:41）",
+          "headline": "出発停留所にあと 11分 で到着 運行中",
+          "statusNotes": [
+            "（ 10分 遅れ）"
+          ],
           "stops": [
-            "この便は、正確な情報が提供出来ていない可能性があります。",
             "平塚球場",
             "西新町",
             "中原東",
             "中原中宿",
             "出発停留所"
           ],
-          "departureScheduledTime": "22:33",
-          "sourceUpdatedTime": "22:40",
-          "arrivalInMinutes": null,
-          "delayMinutes": null,
+          "departureScheduledTime": null,
+          "sourceUpdatedTime": "22:41",
+          "arrivalInMinutes": 11,
+          "delayMinutes": 10,
           "scheduledArrivalTime": "22:42",
-          "expectedArrivalTime": "22:42",
-          "arrivalScheduled": "（22:42着予定）"
+          "expectedArrivalTime": "22:52",
+          "arrivalScheduled": "（22:52着予定）"
         }
       ],
       "details": [
@@ -92,8 +93,8 @@
         "※",
         "乗車バス停から降車バス停までの所要時分",
         "所要時分",
-        "5分",
-        "（通常）",
+        "4分",
+        "（予測）",
         "運賃(大人)",
         "現金",
         "230円",
@@ -103,15 +104,15 @@
         "Ｔ印はＴｗｉｎＬｉｎｅｒです。",
         "運行状況により、所要時分は異なります。目安としてお考えください。",
         "「この便は、正確な情報が提供出来ていない可能性があります。」と表示されている際は、「車載器等の故障」、「運行予定の車両と別の車両で運行中」、「大幅な遅延」等の可能性があります。担当営業所までお問い合わせください。",
-        "(最終更新 22:40）",
-        "平塚駅北口を22:33発予定",
-        "この便は、正確な情報が提供出来ていない可能性があります。",
+        "(最終更新 22:41）",
+        "出発停留所にあと 11分 で到着 運行中",
+        "（ 10分 遅れ）",
         "平塚球場",
         "西新町",
         "中原東",
         "中原中宿",
         "出発停留所",
-        "（22:42着予定）"
+        "（22:52着予定）"
       ],
       "direction": {
         "key": "forward",
@@ -121,7 +122,7 @@
     },
     "reverse": {
       "status": "ok",
-      "fetchedAt": "2026-05-03T13:40:30.487224Z",
+      "fetchedAt": "2026-05-03T13:41:20.273215Z",
       "message": "該当する情報は現在ありません。",
       "hasLiveData": false,
       "route": {
