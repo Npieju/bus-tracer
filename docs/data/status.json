@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
-  "fetchedAt": "2026-09-06T13:46:28.750052Z",
-  "status": "ok",
-  "message": "双方向のデータを取得しました。",
+  "fetchedAt": "2026-09-06T17:30:01.862051Z",
+  "status": "partial",
+  "message": "一方向のみ取得できています。",
   "directionOrder": [
     "forward",
     "reverse"
@@ -11,7 +11,7 @@
   "directions": {
     "forward": {
       "status": "ok",
-      "fetchedAt": "2026-09-06T13:46:26.910934Z",
+      "fetchedAt": "2026-09-06T17:30:00.073543Z",
       "message": "該当する情報は現在ありません。",
       "hasLiveData": false,
       "route": {
@@ -47,9 +47,9 @@
       }
     },
     "reverse": {
-      "status": "ok",
-      "fetchedAt": "2026-09-06T13:46:28.749862Z",
-      "message": "該当する情報は現在ありません。",
+      "status": "error",
+      "fetchedAt": "2026-09-06T17:30:01.861931Z",
+      "message": "データ取得に失敗しました。次回の自動更新を待ってください。",
       "hasLiveData": false,
       "route": {
         "fromStop": {
@@ -64,18 +64,13 @@
       "source": {
         "name": "神奈中バスロケーション",
         "url": "https://real.kanachu.jp/pc/top",
-        "pageTitle": "目的停留所〜出発停留所 接近情報検索結果 | 接近情報検索 | 神奈中バスロケ"
+        "pageTitle": null
       },
       "overview": [],
       "notices": [],
       "journeys": [],
       "details": [
-        "該当する情報は現在ありません。",
-        "乗車バス停",
-        "目的停留所",
-        "降車バス停",
-        "出発停留所",
-        "最新の運行情報につきましては こちら をご確認ください。"
+        "接近情報ページのタイトルを確認できませんでした。"
       ],
       "direction": {
         "key": "reverse",
