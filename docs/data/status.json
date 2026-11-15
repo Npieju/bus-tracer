@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "fetchedAt": "2026-11-15T08:24:05.202484Z",
+  "fetchedAt": "2026-11-15T08:31:41.351352Z",
   "status": "ok",
   "message": "双方向のデータを取得しました。",
   "directionOrder": [
@@ -11,7 +11,7 @@
   "directions": {
     "forward": {
       "status": "ok",
-      "fetchedAt": "2026-11-15T08:24:02.854903Z",
+      "fetchedAt": "2026-11-15T08:31:39.883569Z",
       "message": "接近情報を取得しました。",
       "hasLiveData": true,
       "route": {
@@ -48,14 +48,14 @@
           "vehicleNumber": "い46",
           "vehicleMark": "※",
           "accessibilityLabel": "ノンステップ",
-          "duration": "4分",
-          "durationNote": "（通常）",
+          "duration": "6分",
+          "durationNote": "（予測）",
           "cashFare": "230円",
           "icFare": "230円",
-          "updatedAtText": "(最終更新 17:24）",
-          "headline": "平塚駅北口を17:25発予定",
+          "updatedAtText": "(最終更新 17:31）",
+          "headline": "出発停留所にあと 7分 で到着 運行中",
           "statusNotes": [
-            "予定通り発車します"
+            "（ 2分 遅れ）"
           ],
           "stops": [
             "平塚球場",
@@ -64,13 +64,13 @@
             "中原中宿",
             "出発停留所"
           ],
-          "departureScheduledTime": "17:25",
-          "sourceUpdatedTime": "17:24",
-          "arrivalInMinutes": null,
-          "delayMinutes": null,
+          "departureScheduledTime": null,
+          "sourceUpdatedTime": "17:31",
+          "arrivalInMinutes": 7,
+          "delayMinutes": 2,
           "scheduledArrivalTime": "17:36",
-          "expectedArrivalTime": "17:36",
-          "arrivalScheduled": "（17:36着予定）"
+          "expectedArrivalTime": "17:38",
+          "arrivalScheduled": "（17:38着予定）"
         },
         {
           "rank": 2,
@@ -84,7 +84,7 @@
           "durationNote": "（通常）",
           "cashFare": "230円",
           "icFare": "230円",
-          "updatedAtText": "(最終更新 17:24）",
+          "updatedAtText": "(最終更新 17:31）",
           "headline": "平塚駅北口を17:50発予定",
           "statusNotes": [
             "(発車から9分)"
@@ -97,7 +97,7 @@
             "出発停留所"
           ],
           "departureScheduledTime": "17:50",
-          "sourceUpdatedTime": "17:24",
+          "sourceUpdatedTime": "17:31",
           "arrivalInMinutes": null,
           "delayMinutes": null,
           "scheduledArrivalTime": "17:59",
@@ -116,7 +116,7 @@
           "durationNote": "（通常）",
           "cashFare": "230円",
           "icFare": "230円",
-          "updatedAtText": "(最終更新 17:24）",
+          "updatedAtText": "(最終更新 17:31）",
           "headline": "平塚駅北口を18:25発予定",
           "statusNotes": [
             "(発車から11分)"
@@ -129,7 +129,7 @@
             "出発停留所"
           ],
           "departureScheduledTime": "18:25",
-          "sourceUpdatedTime": "17:24",
+          "sourceUpdatedTime": "17:31",
           "arrivalInMinutes": null,
           "delayMinutes": null,
           "scheduledArrivalTime": "18:36",
@@ -148,7 +148,7 @@
           "durationNote": "（通常）",
           "cashFare": "230円",
           "icFare": "230円",
-          "updatedAtText": "(最終更新 17:24）",
+          "updatedAtText": "(最終更新 17:31）",
           "headline": "平塚駅北口を18:45発予定",
           "statusNotes": [
             "(発車から9分)"
@@ -161,7 +161,7 @@
             "出発停留所"
           ],
           "departureScheduledTime": "18:45",
-          "sourceUpdatedTime": "17:24",
+          "sourceUpdatedTime": "17:31",
           "arrivalInMinutes": null,
           "delayMinutes": null,
           "scheduledArrivalTime": "18:54",
@@ -180,7 +180,7 @@
           "durationNote": "（通常）",
           "cashFare": "230円",
           "icFare": "230円",
-          "updatedAtText": "(最終更新 17:24）",
+          "updatedAtText": "(最終更新 17:31）",
           "headline": "平塚駅北口を19:10発予定",
           "statusNotes": [
             "(発車から9分)"
@@ -193,7 +193,7 @@
             "出発停留所"
           ],
           "departureScheduledTime": "19:10",
-          "sourceUpdatedTime": "17:24",
+          "sourceUpdatedTime": "17:31",
           "arrivalInMinutes": null,
           "delayMinutes": null,
           "scheduledArrivalTime": "19:19",
@@ -212,7 +212,7 @@
           "durationNote": "（通常）",
           "cashFare": "230円",
           "icFare": "230円",
-          "updatedAtText": "(最終更新 17:24）",
+          "updatedAtText": "(最終更新 17:31）",
           "headline": "平塚駅北口を19:25発予定",
           "statusNotes": [
             "(発車から11分)"
@@ -225,7 +225,7 @@
             "出発停留所"
           ],
           "departureScheduledTime": "19:25",
-          "sourceUpdatedTime": "17:24",
+          "sourceUpdatedTime": "17:31",
           "arrivalInMinutes": null,
           "delayMinutes": null,
           "scheduledArrivalTime": "19:36",
@@ -244,7 +244,7 @@
           "durationNote": "（通常）",
           "cashFare": "230円",
           "icFare": "230円",
-          "updatedAtText": "(最終更新 17:24）",
+          "updatedAtText": "(最終更新 17:31）",
           "headline": "平塚駅北口を19:45発予定",
           "statusNotes": [
             "(発車から9分)"
@@ -257,7 +257,7 @@
             "出発停留所"
           ],
           "departureScheduledTime": "19:45",
-          "sourceUpdatedTime": "17:24",
+          "sourceUpdatedTime": "17:31",
           "arrivalInMinutes": null,
           "delayMinutes": null,
           "scheduledArrivalTime": "19:54",
@@ -276,7 +276,7 @@
           "durationNote": "（通常）",
           "cashFare": "230円",
           "icFare": "230円",
-          "updatedAtText": "(最終更新 17:24）",
+          "updatedAtText": "(最終更新 17:31）",
           "headline": "平塚駅北口を20:00発予定",
           "statusNotes": [
             "(発車から9分)"
@@ -289,7 +289,7 @@
             "出発停留所"
           ],
           "departureScheduledTime": "20:00",
-          "sourceUpdatedTime": "17:24",
+          "sourceUpdatedTime": "17:31",
           "arrivalInMinutes": null,
           "delayMinutes": null,
           "scheduledArrivalTime": "20:09",
@@ -308,7 +308,7 @@
           "durationNote": "（通常）",
           "cashFare": "230円",
           "icFare": "230円",
-          "updatedAtText": "(最終更新 17:24）",
+          "updatedAtText": "(最終更新 17:31）",
           "headline": "平塚駅北口を20:20発予定",
           "statusNotes": [
             "(発車から11分)"
@@ -321,7 +321,7 @@
             "出発停留所"
           ],
           "departureScheduledTime": "20:20",
-          "sourceUpdatedTime": "17:24",
+          "sourceUpdatedTime": "17:31",
           "arrivalInMinutes": null,
           "delayMinutes": null,
           "scheduledArrivalTime": "20:31",
@@ -340,7 +340,7 @@
           "durationNote": "（通常）",
           "cashFare": "230円",
           "icFare": "230円",
-          "updatedAtText": "(最終更新 17:24）",
+          "updatedAtText": "(最終更新 17:31）",
           "headline": "平塚駅北口を21:00発予定",
           "statusNotes": [
             "(発車から9分)"
@@ -353,7 +353,7 @@
             "出発停留所"
           ],
           "departureScheduledTime": "21:00",
-          "sourceUpdatedTime": "17:24",
+          "sourceUpdatedTime": "17:31",
           "arrivalInMinutes": null,
           "delayMinutes": null,
           "scheduledArrivalTime": "21:09",
@@ -382,8 +382,8 @@
         "※",
         "乗車バス停から降車バス停までの所要時分",
         "所要時分",
-        "4分",
-        "（通常）",
+        "6分",
+        "（予測）",
         "運賃(大人)",
         "現金",
         "230円",
@@ -393,15 +393,15 @@
         "Ｔ印はＴｗｉｎＬｉｎｅｒです。",
         "運行状況により、所要時分は異なります。目安としてお考えください。",
         "「この便は、正確な情報が提供出来ていない可能性があります。」と表示されている際は、「車載器等の故障」、「運行予定の車両と別の車両で運行中」、「大幅な遅延」等の可能性があります。担当営業所までお問い合わせください。",
-        "(最終更新 17:24）",
-        "平塚駅北口を17:25発予定",
-        "予定通り発車します",
+        "(最終更新 17:31）",
+        "出発停留所にあと 7分 で到着 運行中",
+        "（ 2分 遅れ）",
         "平塚球場",
         "西新町",
         "中原東",
         "中原中宿",
         "出発停留所",
-        "（17:36着予定）",
+        "（17:38着予定）",
         "早い順 2",
         "バスの系統と、行き先、経由",
         "系統",
@@ -426,7 +426,7 @@
         "Ｔ印はＴｗｉｎＬｉｎｅｒです。",
         "運行状況により、所要時分は異なります。目安としてお考えください。",
         "「この便は、正確な情報が提供出来ていない可能性があります。」と表示されている際は、「車載器等の故障」、「運行予定の車両と別の車両で運行中」、「大幅な遅延」等の可能性があります。担当営業所までお問い合わせください。",
-        "(最終更新 17:24）",
+        "(最終更新 17:31）",
         "平塚駅北口を17:50発予定",
         "(発車から9分)",
         "平塚球場",
@@ -459,7 +459,7 @@
         "Ｔ印はＴｗｉｎＬｉｎｅｒです。",
         "運行状況により、所要時分は異なります。目安としてお考えください。",
         "「この便は、正確な情報が提供出来ていない可能性があります。」と表示されている際は、「車載器等の故障」、「運行予定の車両と別の車両で運行中」、「大幅な遅延」等の可能性があります。担当営業所までお問い合わせください。",
-        "(最終更新 17:24）",
+        "(最終更新 17:31）",
         "平塚駅北口を18:25発予定",
         "(発車から11分)",
         "平塚球場",
@@ -492,7 +492,7 @@
         "Ｔ印はＴｗｉｎＬｉｎｅｒです。",
         "運行状況により、所要時分は異なります。目安としてお考えください。",
         "「この便は、正確な情報が提供出来ていない可能性があります。」と表示されている際は、「車載器等の故障」、「運行予定の車両と別の車両で運行中」、「大幅な遅延」等の可能性があります。担当営業所までお問い合わせください。",
-        "(最終更新 17:24）",
+        "(最終更新 17:31）",
         "平塚駅北口を18:45発予定",
         "(発車から9分)",
         "平塚球場",
@@ -525,7 +525,7 @@
         "Ｔ印はＴｗｉｎＬｉｎｅｒです。",
         "運行状況により、所要時分は異なります。目安としてお考えください。",
         "「この便は、正確な情報が提供出来ていない可能性があります。」と表示されている際は、「車載器等の故障」、「運行予定の車両と別の車両で運行中」、「大幅な遅延」等の可能性があります。担当営業所までお問い合わせください。",
-        "(最終更新 17:24）",
+        "(最終更新 17:31）",
         "平塚駅北口を19:10発予定",
         "(発車から9分)",
         "平塚球場",
@@ -558,7 +558,7 @@
         "Ｔ印はＴｗｉｎＬｉｎｅｒです。",
         "運行状況により、所要時分は異なります。目安としてお考えください。",
         "「この便は、正確な情報が提供出来ていない可能性があります。」と表示されている際は、「車載器等の故障」、「運行予定の車両と別の車両で運行中」、「大幅な遅延」等の可能性があります。担当営業所までお問い合わせください。",
-        "(最終更新 17:24）",
+        "(最終更新 17:31）",
         "平塚駅北口を19:25発予定",
         "(発車から11分)",
         "平塚球場",
@@ -591,7 +591,7 @@
         "Ｔ印はＴｗｉｎＬｉｎｅｒです。",
         "運行状況により、所要時分は異なります。目安としてお考えください。",
         "「この便は、正確な情報が提供出来ていない可能性があります。」と表示されている際は、「車載器等の故障」、「運行予定の車両と別の車両で運行中」、「大幅な遅延」等の可能性があります。担当営業所までお問い合わせください。",
-        "(最終更新 17:24）",
+        "(最終更新 17:31）",
         "平塚駅北口を19:45発予定",
         "(発車から9分)",
         "平塚球場",
@@ -624,7 +624,7 @@
         "Ｔ印はＴｗｉｎＬｉｎｅｒです。",
         "運行状況により、所要時分は異なります。目安としてお考えください。",
         "「この便は、正確な情報が提供出来ていない可能性があります。」と表示されている際は、「車載器等の故障」、「運行予定の車両と別の車両で運行中」、「大幅な遅延」等の可能性があります。担当営業所までお問い合わせください。",
-        "(最終更新 17:24）",
+        "(最終更新 17:31）",
         "平塚駅北口を20:00発予定",
         "(発車から9分)",
         "平塚球場",
@@ -657,7 +657,7 @@
         "Ｔ印はＴｗｉｎＬｉｎｅｒです。",
         "運行状況により、所要時分は異なります。目安としてお考えください。",
         "「この便は、正確な情報が提供出来ていない可能性があります。」と表示されている際は、「車載器等の故障」、「運行予定の車両と別の車両で運行中」、「大幅な遅延」等の可能性があります。担当営業所までお問い合わせください。",
-        "(最終更新 17:24）",
+        "(最終更新 17:31）",
         "平塚駅北口を20:20発予定",
         "(発車から11分)",
         "平塚球場",
@@ -690,7 +690,7 @@
         "Ｔ印はＴｗｉｎＬｉｎｅｒです。",
         "運行状況により、所要時分は異なります。目安としてお考えください。",
         "「この便は、正確な情報が提供出来ていない可能性があります。」と表示されている際は、「車載器等の故障」、「運行予定の車両と別の車両で運行中」、「大幅な遅延」等の可能性があります。担当営業所までお問い合わせください。",
-        "(最終更新 17:24）",
+        "(最終更新 17:31）",
         "平塚駅北口を21:00発予定",
         "(発車から9分)",
         "平塚球場",
@@ -708,7 +708,7 @@
     },
     "reverse": {
       "status": "ok",
-      "fetchedAt": "2026-11-15T08:24:05.201106Z",
+      "fetchedAt": "2026-11-15T08:31:41.350016Z",
       "message": "接近情報を取得しました。",
       "hasLiveData": true,
       "route": {
@@ -746,12 +746,14 @@
           "vehicleMark": "※",
           "accessibilityLabel": "ノンステップ",
           "duration": "4分",
-          "durationNote": "（通常）",
+          "durationNote": "（予測）",
           "cashFare": "230円",
           "icFare": "230円",
-          "updatedAtText": "(最終更新 17:24）",
-          "headline": "伊勢原駅南口を17:23発予定",
-          "statusNotes": [],
+          "updatedAtText": "(最終更新 17:31）",
+          "headline": "目的停留所にあと 17分 で到着 運行中",
+          "statusNotes": [
+            "（ 5分 遅れ）"
+          ],
           "stops": [
             "横内団地前",
             "今里",
@@ -759,13 +761,13 @@
             "市場前",
             "目的停留所"
           ],
-          "departureScheduledTime": "17:23",
-          "sourceUpdatedTime": "17:24",
-          "arrivalInMinutes": null,
-          "delayMinutes": null,
+          "departureScheduledTime": null,
+          "sourceUpdatedTime": "17:31",
+          "arrivalInMinutes": 17,
+          "delayMinutes": 5,
           "scheduledArrivalTime": "17:44",
-          "expectedArrivalTime": "17:44",
-          "arrivalScheduled": "（17:44着予定）"
+          "expectedArrivalTime": "17:49",
+          "arrivalScheduled": "（17:49着予定）"
         },
         {
           "rank": 2,
@@ -779,7 +781,7 @@
           "durationNote": "（通常）",
           "cashFare": "230円",
           "icFare": "230円",
-          "updatedAtText": "(最終更新 17:24）",
+          "updatedAtText": "(最終更新 17:31）",
           "headline": "田村車庫を17:57発予定",
           "statusNotes": [
             "(発車から7分)"
@@ -792,7 +794,7 @@
             "目的停留所"
           ],
           "departureScheduledTime": "17:57",
-          "sourceUpdatedTime": "17:24",
+          "sourceUpdatedTime": "17:31",
           "arrivalInMinutes": null,
           "delayMinutes": null,
           "scheduledArrivalTime": "18:04",
@@ -811,7 +813,7 @@
           "durationNote": "（通常）",
           "cashFare": "230円",
           "icFare": "230円",
-          "updatedAtText": "(最終更新 17:24）",
+          "updatedAtText": "(最終更新 17:31）",
           "headline": "愛甲石田駅を18:01発予定",
           "statusNotes": [
             "(発車から23分)"
@@ -824,7 +826,7 @@
             "目的停留所"
           ],
           "departureScheduledTime": "18:01",
-          "sourceUpdatedTime": "17:24",
+          "sourceUpdatedTime": "17:31",
           "arrivalInMinutes": null,
           "delayMinutes": null,
           "scheduledArrivalTime": "18:24",
@@ -843,7 +845,7 @@
           "durationNote": "（通常）",
           "cashFare": "230円",
           "icFare": "230円",
-          "updatedAtText": "(最終更新 17:24）",
+          "updatedAtText": "(最終更新 17:31）",
           "headline": "伊勢原駅南口を18:23発予定",
           "statusNotes": [
             "(発車から21分)"
@@ -856,7 +858,7 @@
             "目的停留所"
           ],
           "departureScheduledTime": "18:23",
-          "sourceUpdatedTime": "17:24",
+          "sourceUpdatedTime": "17:31",
           "arrivalInMinutes": null,
           "delayMinutes": null,
           "scheduledArrivalTime": "18:44",
@@ -875,7 +877,7 @@
           "durationNote": "（通常）",
           "cashFare": "230円",
           "icFare": "230円",
-          "updatedAtText": "(最終更新 17:24）",
+          "updatedAtText": "(最終更新 17:31）",
           "headline": "田村車庫を18:57発予定",
           "statusNotes": [
             "(発車から7分)"
@@ -888,7 +890,7 @@
             "目的停留所"
           ],
           "departureScheduledTime": "18:57",
-          "sourceUpdatedTime": "17:24",
+          "sourceUpdatedTime": "17:31",
           "arrivalInMinutes": null,
           "delayMinutes": null,
           "scheduledArrivalTime": "19:04",
@@ -907,7 +909,7 @@
           "durationNote": "（通常）",
           "cashFare": "230円",
           "icFare": "230円",
-          "updatedAtText": "(最終更新 17:24）",
+          "updatedAtText": "(最終更新 17:31）",
           "headline": "愛甲石田駅を19:06発予定",
           "statusNotes": [
             "(発車から23分)"
@@ -920,7 +922,7 @@
             "目的停留所"
           ],
           "departureScheduledTime": "19:06",
-          "sourceUpdatedTime": "17:24",
+          "sourceUpdatedTime": "17:31",
           "arrivalInMinutes": null,
           "delayMinutes": null,
           "scheduledArrivalTime": "19:29",
@@ -939,7 +941,7 @@
           "durationNote": "（通常）",
           "cashFare": "230円",
           "icFare": "230円",
-          "updatedAtText": "(最終更新 17:24）",
+          "updatedAtText": "(最終更新 17:31）",
           "headline": "伊勢原駅南口を19:25発予定",
           "statusNotes": [
             "(発車から21分)"
@@ -952,7 +954,7 @@
             "目的停留所"
           ],
           "departureScheduledTime": "19:25",
-          "sourceUpdatedTime": "17:24",
+          "sourceUpdatedTime": "17:31",
           "arrivalInMinutes": null,
           "delayMinutes": null,
           "scheduledArrivalTime": "19:46",
@@ -982,7 +984,7 @@
         "乗車バス停から降車バス停までの所要時分",
         "所要時分",
         "4分",
-        "（通常）",
+        "（予測）",
         "運賃(大人)",
         "現金",
         "230円",
@@ -992,14 +994,15 @@
         "Ｔ印はＴｗｉｎＬｉｎｅｒです。",
         "運行状況により、所要時分は異なります。目安としてお考えください。",
         "「この便は、正確な情報が提供出来ていない可能性があります。」と表示されている際は、「車載器等の故障」、「運行予定の車両と別の車両で運行中」、「大幅な遅延」等の可能性があります。担当営業所までお問い合わせください。",
-        "(最終更新 17:24）",
-        "伊勢原駅南口を17:23発予定",
+        "(最終更新 17:31）",
+        "目的停留所にあと 17分 で到着 運行中",
+        "（ 5分 遅れ）",
         "横内団地前",
         "今里",
         "坂口",
         "市場前",
         "目的停留所",
-        "（17:44着予定）",
+        "（17:49着予定）",
         "早い順 2",
         "バスの系統と、行き先、経由",
         "系統",
@@ -1024,7 +1027,7 @@
         "Ｔ印はＴｗｉｎＬｉｎｅｒです。",
         "運行状況により、所要時分は異なります。目安としてお考えください。",
         "「この便は、正確な情報が提供出来ていない可能性があります。」と表示されている際は、「車載器等の故障」、「運行予定の車両と別の車両で運行中」、「大幅な遅延」等の可能性があります。担当営業所までお問い合わせください。",
-        "(最終更新 17:24）",
+        "(最終更新 17:31）",
         "田村車庫を17:57発予定",
         "(発車から7分)",
         "横内団地前",
@@ -1057,7 +1060,7 @@
         "Ｔ印はＴｗｉｎＬｉｎｅｒです。",
         "運行状況により、所要時分は異なります。目安としてお考えください。",
         "「この便は、正確な情報が提供出来ていない可能性があります。」と表示されている際は、「車載器等の故障」、「運行予定の車両と別の車両で運行中」、「大幅な遅延」等の可能性があります。担当営業所までお問い合わせください。",
-        "(最終更新 17:24）",
+        "(最終更新 17:31）",
         "愛甲石田駅を18:01発予定",
         "(発車から23分)",
         "横内団地前",
@@ -1090,7 +1093,7 @@
         "Ｔ印はＴｗｉｎＬｉｎｅｒです。",
         "運行状況により、所要時分は異なります。目安としてお考えください。",
         "「この便は、正確な情報が提供出来ていない可能性があります。」と表示されている際は、「車載器等の故障」、「運行予定の車両と別の車両で運行中」、「大幅な遅延」等の可能性があります。担当営業所までお問い合わせください。",
-        "(最終更新 17:24）",
+        "(最終更新 17:31）",
         "伊勢原駅南口を18:23発予定",
         "(発車から21分)",
         "横内団地前",
@@ -1123,7 +1126,7 @@
         "Ｔ印はＴｗｉｎＬｉｎｅｒです。",
         "運行状況により、所要時分は異なります。目安としてお考えください。",
         "「この便は、正確な情報が提供出来ていない可能性があります。」と表示されている際は、「車載器等の故障」、「運行予定の車両と別の車両で運行中」、「大幅な遅延」等の可能性があります。担当営業所までお問い合わせください。",
-        "(最終更新 17:24）",
+        "(最終更新 17:31）",
         "田村車庫を18:57発予定",
         "(発車から7分)",
         "横内団地前",
@@ -1156,7 +1159,7 @@
         "Ｔ印はＴｗｉｎＬｉｎｅｒです。",
         "運行状況により、所要時分は異なります。目安としてお考えください。",
         "「この便は、正確な情報が提供出来ていない可能性があります。」と表示されている際は、「車載器等の故障」、「運行予定の車両と別の車両で運行中」、「大幅な遅延」等の可能性があります。担当営業所までお問い合わせください。",
-        "(最終更新 17:24）",
+        "(最終更新 17:31）",
         "愛甲石田駅を19:06発予定",
         "(発車から23分)",
         "横内団地前",
@@ -1189,7 +1192,7 @@
         "Ｔ印はＴｗｉｎＬｉｎｅｒです。",
         "運行状況により、所要時分は異なります。目安としてお考えください。",
         "「この便は、正確な情報が提供出来ていない可能性があります。」と表示されている際は、「車載器等の故障」、「運行予定の車両と別の車両で運行中」、「大幅な遅延」等の可能性があります。担当営業所までお問い合わせください。",
-        "(最終更新 17:24）",
+        "(最終更新 17:31）",
         "伊勢原駅南口を19:25発予定",
         "(発車から21分)",
         "横内団地前",
